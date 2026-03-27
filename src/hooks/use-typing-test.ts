@@ -5,6 +5,8 @@ import { generateWords, type Language } from "@/lib/words";
 
 export type CharState = "pending" | "correct" | "incorrect";
 export type WordState = "pending" | "active" | "correct" | "incorrect";
+export type TestMode = "time" | "infinite";
+export type TimeLimit = 15 | 30 | 60 | 120;
 
 export interface TypingStats {
   correctChars: number;
@@ -16,7 +18,15 @@ export interface TypingStats {
 
 export interface UseTypingTestOptions {
   language: Language;
-  wordCount: number;
+  mode: TestMode;
+  timeLimit: TimeLimit;
+}
+
+function wordCountForMode(mode: TestMode, timeLimit: TimeLimit): number {
+  if (mode === "infinite") return 200;
+  // Estimate ~80 WPM max * avg 5 chars/word, generate plenty
+  const estimatedWords = Math.ceil((80 * timeLimit) / 60);
+  return Math.max(estimatedWords, 50);
 }
 
 export interface UseTypingTestReturn {
@@ -27,15 +37,23 @@ export interface UseTypingTestReturn {
   charStates: CharState[][];
   wordStates: WordState[];
   stats: TypingStats;
+  mode: TestMode;
+  timeLimit: TimeLimit;
+  timeLeft: number;
+  isActive: boolean;
   isFinished: boolean;
   handleKeyDown: (key: string) => "correct" | "incorrect" | "control";
   reset: () => void;
+  stopTest: () => void;
 }
 
 export function useTypingTest({
   language,
-  wordCount,
+  mode,
+  timeLimit,
 }: UseTypingTestOptions): UseTypingTestReturn {
+  const wordCount = wordCountForMode(mode, timeLimit);
+
   const [words, setWords] = useState<string[]>(() =>
     generateWords(language, wordCount)
   );
@@ -59,17 +77,28 @@ export function useTypingTest({
     wpm: 0,
     elapsedSeconds: 0,
   });
+  const [isActive, setIsActive] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(mode === "time" ? timeLimit : 0);
 
   const startTimeRef = useRef<number | null>(null);
   const correctCharsRef = useRef(0);
   const incorrectCharsRef = useRef(0);
   const totalKeystrokesRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // WPM timer
+  // Cleanup timers on unmount
   useEffect(() => {
-    if (startTimeRef.current !== null && !isFinished) {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (countdownRef.current) clearInterval(countdownRef.current);
+    };
+  }, []);
+
+  // WPM timer — starts when isActive becomes true
+  useEffect(() => {
+    if (isActive && !isFinished) {
       timerRef.current = setInterval(() => {
         const elapsed = (Date.now() - startTimeRef.current!) / 1000;
         const minutes = elapsed / 60;
@@ -84,7 +113,49 @@ export function useTypingTest({
         if (timerRef.current) clearInterval(timerRef.current);
       };
     }
-  }, [isFinished, startTimeRef.current !== null]);
+  }, [isActive, isFinished]);
+
+  // Countdown timer for time mode
+  useEffect(() => {
+    if (isActive && !isFinished && mode === "time") {
+      countdownRef.current = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            // Time's up
+            setIsFinished(true);
+            setIsActive(false);
+            if (timerRef.current) clearInterval(timerRef.current);
+            if (countdownRef.current) clearInterval(countdownRef.current);
+            // Final WPM calc
+            const elapsed = (Date.now() - startTimeRef.current!) / 1000;
+            const minutes = elapsed / 60;
+            const wpm = minutes > 0 ? Math.round(correctCharsRef.current / 5 / minutes) : 0;
+            setStats((s) => ({ ...s, wpm, elapsedSeconds: Math.floor(elapsed) }));
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => {
+        if (countdownRef.current) clearInterval(countdownRef.current);
+      };
+    }
+  }, [isActive, isFinished, mode]);
+
+  const stopTest = useCallback(() => {
+    if (!isActive) return;
+    setIsFinished(true);
+    setIsActive(false);
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (countdownRef.current) clearInterval(countdownRef.current);
+    // Final WPM
+    if (startTimeRef.current) {
+      const elapsed = (Date.now() - startTimeRef.current) / 1000;
+      const minutes = elapsed / 60;
+      const wpm = minutes > 0 ? Math.round(correctCharsRef.current / 5 / minutes) : 0;
+      setStats((s) => ({ ...s, wpm, elapsedSeconds: Math.floor(elapsed) }));
+    }
+  }, [isActive]);
 
   const reset = useCallback(() => {
     const newWords = generateWords(language, wordCount);
@@ -106,12 +177,15 @@ export function useTypingTest({
       elapsedSeconds: 0,
     });
     setIsFinished(false);
+    setIsActive(false);
+    setTimeLeft(mode === "time" ? timeLimit : 0);
     startTimeRef.current = null;
     correctCharsRef.current = 0;
     incorrectCharsRef.current = 0;
     totalKeystrokesRef.current = 0;
     if (timerRef.current) clearInterval(timerRef.current);
-  }, [language, wordCount]);
+    if (countdownRef.current) clearInterval(countdownRef.current);
+  }, [language, wordCount, mode, timeLimit]);
 
   const handleKeyDown = useCallback(
     (key: string): "correct" | "incorrect" | "control" => {
@@ -120,8 +194,7 @@ export function useTypingTest({
       // Start timer on first keystroke
       if (startTimeRef.current === null) {
         startTimeRef.current = Date.now();
-        // Trigger timer effect
-        setStats((prev) => ({ ...prev }));
+        setIsActive(true);
       }
 
       totalKeystrokesRef.current++;
@@ -150,7 +223,9 @@ export function useTypingTest({
         if (nextIndex >= words.length) {
           setWordStates(newWordStates);
           setIsFinished(true);
+          setIsActive(false);
           if (timerRef.current) clearInterval(timerRef.current);
+          if (countdownRef.current) clearInterval(countdownRef.current);
           return "control";
         }
 
@@ -212,8 +287,13 @@ export function useTypingTest({
     charStates,
     wordStates,
     stats,
+    mode,
+    timeLimit,
+    timeLeft,
+    isActive,
     isFinished,
     handleKeyDown,
     reset,
+    stopTest,
   };
 }

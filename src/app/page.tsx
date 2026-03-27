@@ -7,7 +7,9 @@ import {
   type KeyboardInteractionEvent,
 } from "@/components/ui/keyboard";
 import { TypingArea } from "@/components/typing-area";
-import { useTypingTest } from "@/hooks/use-typing-test";
+import { ModeSelector } from "@/components/mode-selector";
+import { LiveStats } from "@/components/live-stats";
+import { useTypingTest, type TestMode, type TimeLimit } from "@/hooks/use-typing-test";
 import type { Language } from "@/lib/words";
 
 const THEMES: KeyboardThemeName[] = [
@@ -45,10 +47,12 @@ export default function Home() {
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
   const [theme, setTheme] = useState<KeyboardThemeName>("classic");
   const [language, setLanguage] = useState<Language>("en");
+  const [mode, setMode] = useState<TestMode>("time");
+  const [timeLimit, setTimeLimit] = useState<TimeLimit>(30);
   const [errorKeys, setErrorKeys] = useState<Set<string>>(new Set());
   const errorTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const typing = useTypingTest({ language, wordCount: 50 });
+  const typing = useTypingTest({ language, mode, timeLimit });
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1024);
@@ -77,7 +81,6 @@ export default function Home() {
       const result = typing.handleKeyDown(key);
 
       if (result === "incorrect") {
-        // Flash the key red briefly
         let code: string | null = null;
         if (key.length === 1) code = charToKeyCode(key);
         if (code) {
@@ -96,10 +99,7 @@ export default function Home() {
 
   const handleKeyEvent = useCallback(
     (event: KeyboardInteractionEvent) => {
-      // Physical keyboard events are handled by the hidden input in TypingArea
-      // This callback is only for visual feedback from pointer/touch
       if (event.phase === "down" && event.source === "pointer") {
-        // Map key code back to key character for the typing engine
         const code = event.code;
         let key: string | undefined;
         if (code === "Space") key = " ";
@@ -120,14 +120,31 @@ export default function Home() {
     setErrorKeys(new Set());
   }, [typing.reset]);
 
-  const handleLanguageToggle = useCallback(() => {
-    setLanguage((prev) => (prev === "en" ? "fr" : "en"));
-  }, []);
+  const handleModeChange = useCallback(
+    (newMode: TestMode) => {
+      setMode(newMode);
+    },
+    []
+  );
 
-  // Reset when language changes
+  const handleTimeLimitChange = useCallback(
+    (newLimit: TimeLimit) => {
+      setTimeLimit(newLimit);
+    },
+    []
+  );
+
+  const handleLanguageChange = useCallback(
+    (newLang: Language) => {
+      setLanguage(newLang);
+    },
+    []
+  );
+
+  // Reset when mode, timeLimit, or language changes
   useEffect(() => {
     typing.reset();
-  }, [language]);
+  }, [mode, timeLimit, language]);
 
   if (isDesktop === null) return null;
 
@@ -143,15 +160,8 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center min-h-screen">
-      {/* Top bar: theme selector + language toggle */}
+      {/* Top bar: theme selector */}
       <div className="fixed top-4 right-4 flex gap-2 z-10">
-        <button
-          onClick={handleLanguageToggle}
-          className="px-3 py-1.5 rounded-md text-xs font-bold uppercase bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-colors"
-        >
-          {language}
-        </button>
-        <div className="w-px bg-zinc-700" />
         {THEMES.map((t) => (
           <button
             key={t}
@@ -169,17 +179,54 @@ export default function Home() {
 
       {/* Typing area - centered */}
       <div className="flex-1 flex flex-col items-center justify-center w-full px-8">
-        <h1 className="text-3xl font-bold tracking-tight mb-8">KeyTest</h1>
+        <h1 className="text-3xl font-bold tracking-tight mb-6">KeyTest</h1>
+
+        {/* Mode selector */}
+        <div className="mb-6">
+          <ModeSelector
+            mode={mode}
+            timeLimit={timeLimit}
+            language={language}
+            onModeChange={handleModeChange}
+            onTimeLimitChange={handleTimeLimitChange}
+            onLanguageChange={handleLanguageChange}
+          />
+        </div>
+
+        {/* Live stats */}
+        <div className="mb-4 h-10 flex items-center">
+          {typing.isFinished ? (
+            <div className="flex items-center gap-6 font-mono text-sm">
+              <span className="text-zinc-400">
+                <span className="text-2xl font-bold text-zinc-100">{typing.stats.wpm}</span> wpm
+              </span>
+              <span className="text-green-400">{typing.stats.correctChars}</span>
+              <span className="text-zinc-600">/</span>
+              <span className="text-red-400">{typing.stats.incorrectChars}</span>
+            </div>
+          ) : (
+            <LiveStats
+              wpm={typing.stats.wpm}
+              timeLeft={typing.timeLeft}
+              elapsedSeconds={typing.stats.elapsedSeconds}
+              mode={mode}
+              isActive={typing.isActive}
+            />
+          )}
+        </div>
+
+        {/* Typing area */}
         <TypingArea
           words={typing.words}
           currentWordIndex={typing.currentWordIndex}
           currentCharIndex={typing.currentCharIndex}
           charStates={typing.charStates}
           wordStates={typing.wordStates}
-          stats={typing.stats}
           isFinished={typing.isFinished}
+          mode={mode}
           onKeyDown={handleTypingKeyDown}
           onReset={handleReset}
+          onStop={typing.stopTest}
         />
       </div>
 

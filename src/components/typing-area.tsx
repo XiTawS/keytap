@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import type { CharState, WordState, TypingStats } from "@/hooks/use-typing-test";
+import type { CharState, WordState, TestMode } from "@/hooks/use-typing-test";
 
 interface TypingAreaProps {
   words: string[];
@@ -10,10 +10,11 @@ interface TypingAreaProps {
   currentCharIndex: number;
   charStates: CharState[][];
   wordStates: WordState[];
-  stats: TypingStats;
   isFinished: boolean;
+  mode: TestMode;
   onKeyDown: (key: string) => "correct" | "incorrect" | "control";
   onReset: () => void;
+  onStop: () => void;
 }
 
 export function TypingArea({
@@ -22,10 +23,11 @@ export function TypingArea({
   currentCharIndex,
   charStates,
   wordStates,
-  stats,
   isFinished,
+  mode,
   onKeyDown,
   onReset,
+  onStop,
 }: TypingAreaProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const wordsContainerRef = useRef<HTMLDivElement>(null);
@@ -57,14 +59,34 @@ export function TypingArea({
     }
   }, [currentWordIndex]);
 
+  const tabPressedRef = useRef(false);
+
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       e.preventDefault();
 
       if (e.repeat) return;
 
+      // Tab+Enter restart (like Monkeytype)
       if (e.key === "Tab") {
+        tabPressedRef.current = true;
+        return;
+      }
+
+      if (e.key === "Enter" && tabPressedRef.current) {
+        tabPressedRef.current = false;
         onReset();
+        return;
+      }
+
+      // Reset tab flag on any other key
+      tabPressedRef.current = false;
+
+      // Esc stops test in infinite mode
+      if (e.key === "Escape") {
+        if (mode === "infinite") {
+          onStop();
+        }
         return;
       }
 
@@ -79,7 +101,7 @@ export function TypingArea({
 
       onKeyDown(key);
     },
-    [onKeyDown, onReset]
+    [onKeyDown, onReset, onStop, mode]
   );
 
   const focusInput = useCallback(() => {
@@ -88,27 +110,9 @@ export function TypingArea({
 
   return (
     <div className="w-full max-w-3xl mx-auto" onClick={focusInput}>
-      {/* Stats bar */}
-      <div className="flex items-center justify-between mb-6 text-sm font-mono">
-        <div className="flex gap-6">
-          <span className="text-zinc-400">
-            <span className="text-2xl font-bold text-zinc-100">{stats.wpm}</span>{" "}
-            wpm
-          </span>
-          {stats.elapsedSeconds > 0 && (
-            <span className="text-zinc-500">
-              {stats.elapsedSeconds}s
-            </span>
-          )}
-        </div>
-        <div className="flex gap-4 text-zinc-500">
-          <span>
-            <span className="text-green-400">{stats.correctChars}</span>
-            {" / "}
-            <span className="text-red-400">{stats.incorrectChars}</span>
-          </span>
-          <span className="text-zinc-600">tab to reset</span>
-        </div>
+      {/* Shortcut hint */}
+      <div className="flex justify-end mb-3 text-xs text-zinc-600 font-mono">
+        <span>tab + enter to restart</span>
       </div>
 
       {/* Words display */}
@@ -172,16 +176,13 @@ export function TypingArea({
       {/* Finished overlay */}
       {isFinished && (
         <div className="mt-8 text-center">
-          <p className="text-3xl font-bold text-zinc-100">{stats.wpm} WPM</p>
-          <p className="text-zinc-400 mt-2">
-            {stats.correctChars} correct / {stats.incorrectChars} incorrect
-          </p>
           <button
             onClick={onReset}
             className="mt-4 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-md text-sm text-zinc-300 transition-colors"
           >
             Try again
           </button>
+          <p className="mt-2 text-xs text-zinc-600">tab + enter</p>
         </div>
       )}
     </div>
