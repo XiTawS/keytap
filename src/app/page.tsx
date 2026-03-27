@@ -9,7 +9,9 @@ import {
 import { TypingArea } from "@/components/typing-area";
 import { ModeSelector } from "@/components/mode-selector";
 import { LiveStats } from "@/components/live-stats";
+import { ResultsScreen } from "@/components/results-screen";
 import { useTypingTest, type TestMode, type TimeLimit } from "@/hooks/use-typing-test";
+import { saveResult } from "@/lib/history";
 import type { Language } from "@/lib/words";
 
 const THEMES: KeyboardThemeName[] = [
@@ -51,8 +53,33 @@ export default function Home() {
   const [timeLimit, setTimeLimit] = useState<TimeLimit>(30);
   const [errorKeys, setErrorKeys] = useState<Set<string>>(new Set());
   const errorTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const resultsSavedRef = useRef(false);
 
   const typing = useTypingTest({ language, mode, timeLimit });
+
+  // Save results to history when test finishes
+  useEffect(() => {
+    if (typing.isFinished && !resultsSavedRef.current) {
+      resultsSavedRef.current = true;
+      const r = typing.getResults();
+      saveResult({
+        wpm: r.wpm,
+        rawWpm: r.rawWpm,
+        accuracy: r.accuracy,
+        correctChars: r.correctChars,
+        incorrectChars: r.incorrectChars,
+        extraChars: r.extraChars,
+        missedChars: r.missedChars,
+        totalTime: r.totalTime,
+        mode,
+        timeLimit,
+        language,
+        date: new Date().toISOString(),
+        correctWords: r.correctWords,
+        totalWords: r.totalWords,
+      });
+    }
+  }, [typing.isFinished]);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1024);
@@ -116,6 +143,13 @@ export default function Home() {
   );
 
   const handleReset = useCallback(() => {
+    resultsSavedRef.current = false;
+    typing.reset();
+    setErrorKeys(new Set());
+  }, [typing.reset]);
+
+  const handleNextTest = useCallback(() => {
+    resultsSavedRef.current = false;
     typing.reset();
     setErrorKeys(new Set());
   }, [typing.reset]);
@@ -193,41 +227,40 @@ export default function Home() {
           />
         </div>
 
-        {/* Live stats */}
-        <div className="mb-4 h-10 flex items-center">
-          {typing.isFinished ? (
-            <div className="flex items-center gap-6 font-mono text-sm">
-              <span className="text-zinc-400">
-                <span className="text-2xl font-bold text-zinc-100">{typing.stats.wpm}</span> wpm
-              </span>
-              <span className="text-green-400">{typing.stats.correctChars}</span>
-              <span className="text-zinc-600">/</span>
-              <span className="text-red-400">{typing.stats.incorrectChars}</span>
+        {typing.isFinished ? (
+          <ResultsScreen
+            results={typing.getResults()}
+            onRestart={handleReset}
+            onNextTest={handleNextTest}
+          />
+        ) : (
+          <>
+            {/* Live stats */}
+            <div className="mb-4 h-10 flex items-center">
+              <LiveStats
+                wpm={typing.stats.wpm}
+                timeLeft={typing.timeLeft}
+                elapsedSeconds={typing.stats.elapsedSeconds}
+                mode={mode}
+                isActive={typing.isActive}
+              />
             </div>
-          ) : (
-            <LiveStats
-              wpm={typing.stats.wpm}
-              timeLeft={typing.timeLeft}
-              elapsedSeconds={typing.stats.elapsedSeconds}
-              mode={mode}
-              isActive={typing.isActive}
-            />
-          )}
-        </div>
 
-        {/* Typing area */}
-        <TypingArea
-          words={typing.words}
-          currentWordIndex={typing.currentWordIndex}
-          currentCharIndex={typing.currentCharIndex}
-          charStates={typing.charStates}
-          wordStates={typing.wordStates}
-          isFinished={typing.isFinished}
-          mode={mode}
-          onKeyDown={handleTypingKeyDown}
-          onReset={handleReset}
-          onStop={typing.stopTest}
-        />
+            {/* Typing area */}
+            <TypingArea
+              words={typing.words}
+              currentWordIndex={typing.currentWordIndex}
+              currentCharIndex={typing.currentCharIndex}
+              charStates={typing.charStates}
+              wordStates={typing.wordStates}
+              isFinished={typing.isFinished}
+              mode={mode}
+              onKeyDown={handleTypingKeyDown}
+              onReset={handleReset}
+              onStop={typing.stopTest}
+            />
+          </>
+        )}
       </div>
 
       {/* Keyboard */}
