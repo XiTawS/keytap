@@ -41,7 +41,7 @@ export function SettingsPanel() {
   const { settings, updateSettings } = useSettings();
 
   return (
-    <div className="shrink-0 w-full bg-zinc-100/80 dark:bg-zinc-900/80 px-6 py-3 transition-colors duration-200">
+    <div className="shrink-0 w-full px-6 py-3">
       <div className="flex flex-col items-center gap-3">
         {/* Row 1: Theme names */}
         <div className="flex items-center gap-1">
@@ -64,41 +64,43 @@ export function SettingsPanel() {
           })}
         </div>
 
-        {/* Row 2: Icon buttons */}
-        <div className="flex items-center gap-1">
-          {/* Light/Dark mode */}
-          <IconButton
-            active={settings.colorMode === "light"}
-            onClick={() => updateSettings({ colorMode: "light" })}
-            label="Light mode"
-          >
-            <Sun size={16} />
-          </IconButton>
-          <IconButton
-            active={settings.colorMode === "dark"}
-            onClick={() => updateSettings({ colorMode: "dark" })}
-            label="Dark mode"
-          >
-            <Moon size={16} />
-          </IconButton>
+        {/* Row 2: Icon buttons in pill containers */}
+        <div className="flex items-center gap-3">
+          {/* Light/Dark mode pill */}
+          <div className="flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-full p-1 gap-0.5">
+            <IconButton
+              active={settings.colorMode === "light"}
+              onClick={() => updateSettings({ colorMode: "light" })}
+              label="Light mode"
+            >
+              <Sun size={16} />
+            </IconButton>
+            <IconButton
+              active={settings.colorMode === "dark"}
+              onClick={() => updateSettings({ colorMode: "dark" })}
+              label="Dark mode"
+            >
+              <Moon size={16} />
+            </IconButton>
+          </div>
 
-          <div className="mx-1.5 h-3.5 w-px bg-zinc-300 dark:bg-zinc-700/50" />
-
-          {/* Sound toggle */}
-          <IconButton
-            active={settings.soundEnabled}
-            onClick={() => updateSettings({ soundEnabled: true })}
-            label="Sound on"
-          >
-            <Volume2 size={16} />
-          </IconButton>
-          <IconButton
-            active={!settings.soundEnabled}
-            onClick={() => updateSettings({ soundEnabled: false })}
-            label="Sound off"
-          >
-            <VolumeX size={16} />
-          </IconButton>
+          {/* Sound toggle pill */}
+          <div className="flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-full p-1 gap-0.5">
+            <IconButton
+              active={settings.soundEnabled}
+              onClick={() => updateSettings({ soundEnabled: true })}
+              label="Sound on"
+            >
+              <Volume2 size={16} />
+            </IconButton>
+            <IconButton
+              active={!settings.soundEnabled}
+              onClick={() => updateSettings({ soundEnabled: false })}
+              label="Sound off"
+            >
+              <VolumeX size={16} />
+            </IconButton>
+          </div>
         </div>
       </div>
     </div>
