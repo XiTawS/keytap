@@ -7,9 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-geist-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -117,6 +117,11 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Theme accent color (set dynamically via JS) */
+:root {
+  --theme-accent: #F57644;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -127,4 +132,54 @@
   html {
     @apply font-sans;
   }
+}
+
+/* Smooth blinking cursor */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-cursor-blink {
+  animation: cursor-blink 1s ease-in-out infinite;
+}
+
+/* Subtle pulse for live WPM */
+@keyframes wpm-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-wpm-pulse {
+  animation: wpm-pulse 2s ease-in-out infinite;
+}
+
+/* Page fade in */
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-page-in {
+  animation: page-fade-in 0.5s ease-out;
+}
+
+/* Results slide up */
+@keyframes results-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-results-in {
+  animation: results-in 0.4s ease-out;
+}
+
+/* Settings panel overlay */
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-overlay-in {
+  animation: overlay-in 0.2s ease-out;
 }

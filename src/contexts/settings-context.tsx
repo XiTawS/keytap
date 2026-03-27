@@ -9,6 +9,16 @@ import {
   type ReactNode,
 } from "react";
 import { loadSettings, saveSettings, type Settings } from "@/lib/settings";
+import type { KeyboardThemeName } from "@/components/ui/keyboard";
+
+const THEME_ACCENT_COLORS: Record<KeyboardThemeName, string> = {
+  classic: "#F57644",
+  mint: "#86C8AC",
+  royal: "#E4D440",
+  dolch: "#D73E42",
+  sand: "#C94E41",
+  scarlet: "#D5868A",
+};
 
 interface SettingsContextType {
   settings: Settings;
@@ -38,6 +48,16 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       return next;
     });
   }, []);
+
+  // Set theme accent CSS variable
+  useEffect(() => {
+    if (settings) {
+      document.documentElement.style.setProperty(
+        "--theme-accent",
+        THEME_ACCENT_COLORS[settings.theme]
+      );
+    }
+  }, [settings?.theme]);
 
   // Don't render until settings loaded from localStorage
   if (!settings) return null;

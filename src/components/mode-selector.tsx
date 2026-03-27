@@ -24,61 +24,78 @@ export function ModeSelector({
   onLanguageChange,
 }: ModeSelectorProps) {
   return (
-    <div className="flex items-center gap-1 rounded-lg bg-zinc-900/80 px-1.5 py-1 text-xs font-medium">
+    <div className="flex items-center gap-0.5 rounded-xl bg-zinc-900/60 px-2 py-1.5 text-xs font-medium backdrop-blur-sm">
       {/* Mode toggles */}
-      <button
+      <PillButton
+        active={mode === "time"}
         onClick={() => onModeChange("time")}
-        className={cn(
-          "rounded-md px-3 py-1.5 transition-colors",
-          mode === "time"
-            ? "bg-zinc-700 text-zinc-100"
-            : "text-zinc-500 hover:text-zinc-300"
-        )}
       >
         time
-      </button>
-      <button
+      </PillButton>
+      <PillButton
+        active={mode === "infinite"}
         onClick={() => onModeChange("infinite")}
-        className={cn(
-          "rounded-md px-3 py-1.5 transition-colors",
-          mode === "infinite"
-            ? "bg-zinc-700 text-zinc-100"
-            : "text-zinc-500 hover:text-zinc-300"
-        )}
       >
         infinite
-      </button>
+      </PillButton>
 
       {/* Divider */}
-      {mode === "time" && <div className="mx-1 h-4 w-px bg-zinc-700" />}
+      {mode === "time" && <Divider />}
 
       {/* Time options (only in time mode) */}
       {mode === "time" &&
         TIME_OPTIONS.map((t) => (
-          <button
+          <PillButton
             key={t}
+            active={timeLimit === t}
             onClick={() => onTimeLimitChange(t)}
-            className={cn(
-              "rounded-md px-2.5 py-1.5 tabular-nums transition-colors",
-              timeLimit === t
-                ? "bg-zinc-700 text-zinc-100"
-                : "text-zinc-500 hover:text-zinc-300"
-            )}
           >
             {t}
-          </button>
+          </PillButton>
         ))}
 
       {/* Divider */}
-      <div className="mx-1 h-4 w-px bg-zinc-700" />
+      <Divider />
 
       {/* Language toggle */}
-      <button
+      <PillButton
+        active={false}
         onClick={() => onLanguageChange(language === "en" ? "fr" : "en")}
-        className="rounded-md px-3 py-1.5 font-bold uppercase text-zinc-400 transition-colors hover:text-zinc-200"
+        className="uppercase font-semibold"
       >
         {language}
-      </button>
+      </PillButton>
     </div>
   );
+}
+
+function PillButton({
+  active,
+  onClick,
+  children,
+  className,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "rounded-lg px-3 py-1 tabular-nums transition-all duration-150",
+        active
+          ? "text-[var(--theme-accent)]"
+          : "text-zinc-500 hover:text-zinc-300",
+        className
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+function Divider() {
+  return <div className="mx-1 h-3.5 w-px bg-zinc-700/50" />;
 }

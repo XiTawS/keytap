@@ -33,7 +33,6 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
         onClose();
       }
     }
-    // Delay to avoid the opening click triggering close
     const id = setTimeout(() => document.addEventListener("mousedown", handleClick), 0);
     return () => {
       clearTimeout(id);
@@ -55,59 +54,61 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-end">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/40" />
+      {/* Backdrop — blur + dim */}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-overlay-in" />
 
       {/* Panel */}
       <div
         ref={panelRef}
-        className="relative h-full w-80 bg-zinc-900 border-l border-zinc-800 shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-200"
+        className="relative h-full w-80 bg-zinc-900/95 backdrop-blur-xl border-l border-zinc-800/50 shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800">
-          <h2 className="text-sm font-semibold tracking-wide uppercase text-zinc-300">Settings</h2>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800/50">
+          <h2 className="text-xs font-semibold tracking-[0.2em] uppercase text-zinc-500">
+            Settings
+          </h2>
           <button
             onClick={onClose}
-            className="text-zinc-500 hover:text-zinc-200 transition-colors text-lg leading-none"
+            className="text-zinc-600 hover:text-zinc-300 transition-colors p-1 rounded-md hover:bg-zinc-800/50"
             aria-label="Close settings"
           >
-            ✕
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18" /><path d="m6 6 12 12" />
+            </svg>
           </button>
         </div>
 
         <div className="p-5 space-y-8">
           {/* Keyboard Theme */}
           <section>
-            <h3 className="text-xs font-medium uppercase tracking-wider text-zinc-500 mb-3">
-              Keyboard Theme
-            </h3>
-            <div className="grid grid-cols-3 gap-2">
+            <SectionLabel>Keyboard Theme</SectionLabel>
+            <div className="grid grid-cols-3 gap-2.5">
               {THEME_SWATCHES.map((t) => (
                 <button
                   key={t.name}
                   onClick={() => updateSettings({ theme: t.name })}
-                  className={`group flex flex-col items-center gap-1.5 rounded-lg p-2 transition-colors ${
+                  className={`group flex flex-col items-center gap-2 rounded-xl p-3 transition-all duration-200 ${
                     settings.theme === t.name
-                      ? "bg-zinc-800 ring-1 ring-zinc-600"
-                      : "hover:bg-zinc-800/50"
+                      ? "bg-zinc-800 ring-2 ring-[var(--theme-accent)]/50"
+                      : "bg-zinc-800/30 hover:bg-zinc-800/60"
                   }`}
                 >
-                  {/* Color swatch */}
-                  <div className="flex gap-0.5">
+                  {/* Color swatch — premium rounded pills */}
+                  <div className="flex gap-1">
                     <div
-                      className="w-4 h-4 rounded-sm"
+                      className="w-5 h-5 rounded-full"
                       style={{ backgroundColor: t.accent }}
                     />
                     <div
-                      className="w-4 h-4 rounded-sm"
+                      className="w-5 h-5 rounded-full"
                       style={{ backgroundColor: t.dark }}
                     />
                     <div
-                      className="w-4 h-4 rounded-sm"
+                      className="w-5 h-5 rounded-full"
                       style={{ backgroundColor: t.light }}
                     />
                   </div>
-                  <span className="text-[10px] capitalize text-zinc-400 group-hover:text-zinc-300">
+                  <span className="text-[10px] capitalize text-zinc-500 group-hover:text-zinc-400 transition-colors">
                     {t.name}
                   </span>
                 </button>
@@ -115,14 +116,14 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
             </div>
           </section>
 
+          <Separator />
+
           {/* Sound */}
           <section>
-            <h3 className="text-xs font-medium uppercase tracking-wider text-zinc-500 mb-3">
-              Sound
-            </h3>
+            <SectionLabel>Sound</SectionLabel>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-zinc-300">Key sounds</span>
+                <span className="text-sm text-zinc-400">Key sounds</span>
                 <Switch
                   checked={settings.soundEnabled}
                   onCheckedChange={(checked) =>
@@ -133,8 +134,8 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
               {settings.soundEnabled && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-zinc-400">Volume</span>
-                    <span className="text-xs text-zinc-500 tabular-nums">
+                    <span className="text-sm text-zinc-500">Volume</span>
+                    <span className="text-xs text-zinc-600 tabular-nums font-mono">
                       {Math.round(settings.volume * 100)}%
                     </span>
                   </div>
@@ -153,13 +154,13 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
             </div>
           </section>
 
+          <Separator />
+
           {/* Haptics */}
           <section>
-            <h3 className="text-xs font-medium uppercase tracking-wider text-zinc-500 mb-3">
-              Haptics
-            </h3>
+            <SectionLabel>Haptics</SectionLabel>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-zinc-300">Vibration feedback</span>
+              <span className="text-sm text-zinc-400">Vibration feedback</span>
               <Switch
                 checked={settings.haptics}
                 onCheckedChange={(checked) =>
@@ -169,21 +170,26 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
             </div>
           </section>
 
+          <Separator />
+
           {/* Language */}
           <section>
-            <h3 className="text-xs font-medium uppercase tracking-wider text-zinc-500 mb-3">
-              Default Language
-            </h3>
+            <SectionLabel>Default Language</SectionLabel>
             <div className="flex gap-2">
               {(["en", "fr"] as Language[]).map((lang) => (
                 <button
                   key={lang}
                   onClick={() => updateSettings({ language: lang })}
-                  className={`px-4 py-1.5 rounded-md text-sm font-medium uppercase transition-colors ${
+                  className={`px-5 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
                     settings.language === lang
-                      ? "bg-zinc-100 text-zinc-900"
-                      : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200"
+                      ? "text-zinc-900"
+                      : "bg-zinc-800/40 text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300"
                   }`}
+                  style={
+                    settings.language === lang
+                      ? { backgroundColor: "var(--theme-accent)" }
+                      : undefined
+                  }
                 >
                   {lang}
                 </button>
@@ -194,4 +200,16 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
       </div>
     </div>
   );
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-600 mb-3">
+      {children}
+    </h3>
+  );
+}
+
+function Separator() {
+  return <div className="h-px bg-zinc-800/50" />;
 }
