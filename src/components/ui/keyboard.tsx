@@ -160,7 +160,6 @@ function KeyboardProvider({
 
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
   const [lastPressedKey, setLastPressedKey] = useState<string | null>(null);
-  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     if (!enableSound || !soundUrl) {
@@ -338,30 +337,6 @@ function KeyboardProvider({
   }, [releaseAllKeys]);
 
   useEffect(() => {
-    const element = containerRef.current;
-    if (!element || typeof IntersectionObserver === "undefined") {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(element);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [containerRef]);
-
-  useEffect(() => {
-    if (!isVisible) {
-      return;
-    }
-
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.repeat) {
         return;
@@ -380,7 +355,7 @@ function KeyboardProvider({
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
     };
-  }, [isVisible, pressKey, releaseKey]);
+  }, [pressKey, releaseKey]);
 
   return (
     <KeyboardContext.Provider

@@ -162,81 +162,85 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
   }, [onRestart]);
 
   return (
-    <div className="w-full max-w-2xl mx-auto animate-results-in">
+    <div className="w-full max-w-5xl mx-auto animate-results-in">
       {/* Big WPM — accent colored */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-4">
         <div
-          className="text-7xl font-bold font-mono tracking-tight"
+          className="text-6xl font-bold font-mono tracking-tight"
           style={{ color: "var(--theme-accent)" }}
         >
           {results.wpm}
         </div>
-        <div className="text-zinc-600 text-xs mt-2 font-mono tracking-widest uppercase">
+        <div className="text-zinc-600 text-xs mt-1 font-mono tracking-widest uppercase">
           words per minute
         </div>
       </div>
 
-      {/* WPM Chart */}
-      <div className="mb-8 bg-zinc-900/40 rounded-xl p-4 border border-zinc-800/50">
-        <WpmChart history={results.wpmHistory} />
-      </div>
+      {/* Chart + Stats side by side */}
+      <div className="flex gap-4 mb-4">
+        {/* WPM Chart */}
+        <div className="flex-1 bg-zinc-900/40 rounded-xl p-3 border border-zinc-800/50">
+          <WpmChart history={results.wpmHistory} />
+        </div>
 
-      {/* Stats grid */}
-      <div className="grid grid-cols-3 gap-3 mb-8">
-        <StatCard
-          label="raw"
-          value={String(results.rawWpm)}
-          color="text-zinc-300"
-        />
-        <StatCard
-          label="accuracy"
-          value={`${results.accuracy}%`}
-          color={getAccuracyColor(results.accuracy)}
-        />
-        <StatCard
-          label="time"
-          value={`${results.totalTime}s`}
-          color="text-zinc-300"
-        />
-        <StatCard
-          label="characters"
-          value={
-            <span className="font-mono text-xs">
-              <span className="text-green-400">{results.correctChars}</span>
-              <span className="text-zinc-700"> / </span>
-              <span className="text-red-400">{results.incorrectChars}</span>
-              <span className="text-zinc-700"> / </span>
-              <span className="text-yellow-400">{results.extraChars}</span>
-              <span className="text-zinc-700"> / </span>
-              <span className="text-zinc-500">{results.missedChars}</span>
-            </span>
-          }
-          sublabel="correct / incorrect / extra / missed"
-        />
-        <StatCard
-          label="words"
-          value={
-            <span className="font-mono">
-              <span className="text-green-400">{results.correctWords}</span>
-              <span className="text-zinc-700"> / </span>
-              <span className="text-zinc-400">{results.totalWords}</span>
-            </span>
-          }
-          sublabel="correct / total"
-        />
+        {/* Stats grid */}
+        <div className="grid grid-cols-2 gap-2 w-72 shrink-0">
+          <StatCard
+            label="raw"
+            value={String(results.rawWpm)}
+            color="text-zinc-300"
+          />
+          <StatCard
+            label="accuracy"
+            value={`${results.accuracy}%`}
+            color={getAccuracyColor(results.accuracy)}
+          />
+          <StatCard
+            label="time"
+            value={`${results.totalTime}s`}
+            color="text-zinc-300"
+          />
+          <StatCard
+            label="words"
+            value={
+              <span className="font-mono">
+                <span className="text-green-400">{results.correctWords}</span>
+                <span className="text-zinc-700"> / </span>
+                <span className="text-zinc-400">{results.totalWords}</span>
+              </span>
+            }
+            sublabel="correct / total"
+          />
+          <StatCard
+            label="characters"
+            value={
+              <span className="font-mono text-xs">
+                <span className="text-green-400">{results.correctChars}</span>
+                <span className="text-zinc-700">/</span>
+                <span className="text-red-400">{results.incorrectChars}</span>
+                <span className="text-zinc-700">/</span>
+                <span className="text-yellow-400">{results.extraChars}</span>
+                <span className="text-zinc-700">/</span>
+                <span className="text-zinc-500">{results.missedChars}</span>
+              </span>
+            }
+            sublabel="ok / err / extra / miss"
+            wide
+          />
+        </div>
       </div>
 
       {/* Actions */}
       <div className="flex items-center justify-center gap-3">
         <button
           onClick={onNextTest}
-          className="px-6 py-2 rounded-lg bg-zinc-800/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-all duration-200 text-sm font-medium border border-zinc-800/50"
+          className="px-6 py-1.5 rounded-lg bg-zinc-800/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-all duration-200 text-sm font-medium border border-zinc-800/50"
         >
           Next test
         </button>
         <button
           onClick={onRestart}
-          className="px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 border"
+          className="px-6 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border"
           style={{
             backgroundColor: "var(--theme-accent)",
             borderColor: "var(--theme-accent)",
@@ -245,9 +249,7 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
         >
           Restart
         </button>
-      </div>
-      <div className="text-center mt-4 text-zinc-700 text-xs font-mono">
-        tab + enter
+        <span className="text-zinc-700 text-xs font-mono ml-2">tab + enter</span>
       </div>
     </div>
   );
@@ -258,20 +260,22 @@ function StatCard({
   value,
   color,
   sublabel,
+  wide,
 }: {
   label: string;
   value: React.ReactNode;
   color?: string;
   sublabel?: string;
+  wide?: boolean;
 }) {
   return (
-    <div className="bg-zinc-900/40 rounded-xl p-4 border border-zinc-800/50">
-      <div className="text-zinc-600 text-[10px] mb-1.5 font-mono tracking-wider uppercase">
+    <div className={`bg-zinc-900/40 rounded-xl p-3 border border-zinc-800/50 ${wide ? "col-span-2" : ""}`}>
+      <div className="text-zinc-600 text-[10px] mb-1 font-mono tracking-wider uppercase">
         {label}
       </div>
-      <div className={`text-xl font-bold font-mono ${color ?? ""}`}>{value}</div>
+      <div className={`text-lg font-bold font-mono ${color ?? ""}`}>{value}</div>
       {sublabel && (
-        <div className="text-zinc-700 text-[9px] mt-1.5 font-mono">{sublabel}</div>
+        <div className="text-zinc-700 text-[9px] mt-1 font-mono">{sublabel}</div>
       )}
     </div>
   );

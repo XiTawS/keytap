@@ -40,7 +40,6 @@ function charToKeyCode(char: string): string | null {
 export default function Home() {
   const { settings } = useSettings();
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const [language, setLanguage] = useState(settings.language);
   const [mode, setMode] = useState<TestMode>("time");
   const [timeLimit, setTimeLimit] = useState<TimeLimit>(30);
@@ -199,26 +198,11 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen animate-page-in">
-      {/* Settings gear — subtle, top-right */}
-      <button
-        onClick={() => setSettingsOpen(true)}
-        className="fixed top-5 right-5 z-10 p-2.5 rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800/50 transition-all duration-200"
-        aria-label="Open settings"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-          <circle cx="12" cy="12" r="3"/>
-        </svg>
-      </button>
-
-      {/* Settings panel */}
-      <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
-
-      {/* Main content — vertically centered */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full max-w-4xl mx-auto px-8">
+    <div className="flex flex-col items-center h-screen overflow-hidden animate-page-in">
+      {/* Main content — flex-1 to fill remaining space */}
+      <div className="flex-1 flex flex-col items-center justify-center w-full max-w-5xl mx-auto px-8 min-h-0">
         {/* Mode selector — compact, Monkeytype style */}
-        <div className="mb-8">
+        <div className="mb-4 shrink-0">
           <ModeSelector
             mode={mode}
             timeLimit={timeLimit}
@@ -238,7 +222,7 @@ export default function Home() {
         ) : (
           <>
             {/* Live stats */}
-            <div className="mb-6 h-10 flex items-center">
+            <div className="mb-3 h-10 flex items-center shrink-0">
               <LiveStats
                 wpm={typing.stats.wpm}
                 timeLeft={typing.timeLeft}
@@ -265,8 +249,8 @@ export default function Home() {
         )}
       </div>
 
-      {/* Keyboard — centered at bottom */}
-      <div className="pb-6 pt-4">
+      {/* Keyboard — centered at bottom, pointer-events-none to never steal focus */}
+      <div className="pb-2 pt-1 pointer-events-none shrink-0">
         <Keyboard
           theme={settings.theme}
           enableSound={settings.soundEnabled}
@@ -277,6 +261,9 @@ export default function Home() {
           highlightKey={highlightKey}
         />
       </div>
+
+      {/* Settings bar — minimal bottom bar */}
+      <SettingsPanel />
     </div>
   );
 }

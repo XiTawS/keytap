@@ -34,9 +34,12 @@ export function TypingArea({
   const activeWordRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
 
-  // Auto-focus input
+  // Auto-focus input and global click refocus
   useEffect(() => {
     inputRef.current?.focus();
+    const refocus = () => inputRef.current?.focus();
+    document.addEventListener("mousedown", refocus);
+    return () => document.removeEventListener("mousedown", refocus);
   }, []);
 
   // Auto-scroll to keep active word visible
@@ -204,7 +207,11 @@ export function TypingArea({
         className="absolute opacity-0 pointer-events-none"
         onKeyDown={handleInputKeyDown}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={() => {
+          setIsFocused(false);
+          // Immediately refocus — input must never lose focus
+          setTimeout(() => inputRef.current?.focus(), 0);
+        }}
         autoFocus
         tabIndex={0}
         aria-label="Type here"
