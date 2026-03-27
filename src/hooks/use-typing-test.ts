@@ -75,14 +75,15 @@ export function useTypingTest({
 }: UseTypingTestOptions): UseTypingTestReturn {
   const wordCount = wordCountForMode(mode, timeLimit);
 
-  const [words, setWords] = useState<string[]>(() =>
+  const [initialWords] = useState<string[]>(() =>
     generateWords(language, wordCount)
   );
+  const [words, setWords] = useState<string[]>(initialWords);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [typed, setTyped] = useState("");
   const [charStates, setCharStates] = useState<CharState[][]>(() =>
-    generateWords(language, wordCount).map((w) =>
+    initialWords.map((w) =>
       Array(w.length).fill("pending") as CharState[]
     )
   );
