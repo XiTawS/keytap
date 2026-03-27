@@ -3,13 +3,18 @@
 import type { KeyboardThemeName } from "@/components/ui/keyboard";
 import { useSettings } from "@/contexts/settings-context";
 
-const THEME_SWATCHES: { name: KeyboardThemeName; accent: string }[] = [
-  { name: "classic", accent: "#F57644" },
-  { name: "mint", accent: "#86C8AC" },
-  { name: "royal", accent: "#E4D440" },
-  { name: "dolch", accent: "#D73E42" },
-  { name: "sand", accent: "#C94E41" },
-  { name: "scarlet", accent: "#D5868A" },
+const THEME_SWATCHES: {
+  name: KeyboardThemeName;
+  accent: string;
+  dark: string;
+  light: string;
+}[] = [
+  { name: "classic", accent: "#F57644", dark: "#737373", light: "#F5F5F5" },
+  { name: "mint", accent: "#86C8AC", dark: "#447B82", light: "#EEEEEE" },
+  { name: "royal", accent: "#E4D440", dark: "#3A3B35", light: "#324974" },
+  { name: "dolch", accent: "#D73E42", dark: "#3E3B4C", light: "#4F5E78" },
+  { name: "sand", accent: "#C94E41", dark: "#893D36", light: "#EFEFEF" },
+  { name: "scarlet", accent: "#E1E1E1", dark: "#D5868A", light: "#E4D7D7" },
 ];
 
 export function SettingsPanel() {
@@ -18,25 +23,34 @@ export function SettingsPanel() {
   return (
     <div className="shrink-0 w-full bg-zinc-900/60 border-t border-zinc-800/40 px-6 py-2">
       <div className="flex items-center justify-center gap-6 text-xs">
-        {/* Theme dots */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-zinc-600 mr-1">theme</span>
-          {THEME_SWATCHES.map((t) => (
-            <button
-              key={t.name}
-              onClick={() => updateSettings({ theme: t.name })}
-              className="w-4 h-4 rounded-full transition-all duration-150 hover:scale-125"
-              style={{
-                backgroundColor: t.accent,
-                boxShadow:
-                  settings.theme === t.name
-                    ? `0 0 0 2px #09090b, 0 0 0 3.5px ${t.accent}`
-                    : "none",
-              }}
-              aria-label={`Theme: ${t.name}`}
-              title={t.name}
-            />
-          ))}
+        {/* Theme swatches */}
+        <div className="flex items-center gap-2">
+          <span className="text-zinc-600 mr-0.5">theme</span>
+          {THEME_SWATCHES.map((t) => {
+            const isSelected = settings.theme === t.name;
+            return (
+              <button
+                key={t.name}
+                onClick={() => updateSettings({ theme: t.name })}
+                className="flex items-center gap-1.5 px-1.5 py-1 rounded-md transition-all duration-150 hover:bg-zinc-800/60"
+                style={{
+                  outline: isSelected ? `2px solid ${t.accent}` : "2px solid transparent",
+                  outlineOffset: "1px",
+                }}
+                aria-label={`Theme: ${t.name}`}
+                title={t.name}
+              >
+                <div className="flex rounded overflow-hidden h-4">
+                  <div className="w-3" style={{ backgroundColor: t.accent }} />
+                  <div className="w-3" style={{ backgroundColor: t.dark }} />
+                  <div className="w-3" style={{ backgroundColor: t.light }} />
+                </div>
+                <span className={`text-[10px] capitalize ${isSelected ? "text-zinc-300" : "text-zinc-500"}`}>
+                  {t.name}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Divider */}

@@ -156,6 +156,8 @@ function KeyboardProvider({
   const audioBufferRef = useRef<AudioBuffer | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
   const pressedKeysRef = useRef<Set<string>>(new Set());
+  const onKeyEventRef = useRef(onKeyEvent);
+  onKeyEventRef.current = onKeyEvent;
   const { trigger } = useWebHaptics();
 
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
@@ -249,9 +251,9 @@ function KeyboardProvider({
 
   const emitKeyEvent = useCallback(
     (phase: KeyboardEventPhase, code: string, source: KeyboardEventSource) => {
-      onKeyEvent?.({ code, phase, source });
+      onKeyEventRef.current?.({ code, phase, source });
     },
-    [onKeyEvent],
+    [],
   );
 
   const triggerPointerHaptic = useCallback(() => {

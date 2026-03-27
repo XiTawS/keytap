@@ -250,7 +250,7 @@ export default function Home() {
       </div>
 
       {/* Keyboard — centered at bottom, pointer-events-none to never steal focus */}
-      <div className="pb-2 pt-1 pointer-events-none shrink-0">
+      <div className="pb-2 pt-1 mb-4 pointer-events-none shrink-0">
         <Keyboard
           theme={settings.theme}
           enableSound={settings.soundEnabled}
