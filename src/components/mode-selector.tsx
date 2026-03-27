@@ -24,7 +24,7 @@ export function ModeSelector({
   onLanguageChange,
 }: ModeSelectorProps) {
   return (
-    <div className="flex items-center gap-0.5 rounded-xl bg-zinc-900/60 px-2 py-1.5 text-xs font-medium backdrop-blur-sm">
+    <div className="flex items-center gap-0.5 rounded-xl bg-zinc-100/60 dark:bg-zinc-900/60 px-2 py-1.5 text-xs font-medium backdrop-blur-sm transition-colors duration-200">
       {/* Mode toggles */}
       <PillButton
         active={mode === "time"}
@@ -87,7 +87,7 @@ function PillButton({
         "rounded-lg px-3 py-1 tabular-nums transition-all duration-150",
         active
           ? "text-[var(--theme-accent)]"
-          : "text-zinc-500 hover:text-zinc-300",
+          : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300",
         className
       )}
     >
@@ -97,5 +97,5 @@ function PillButton({
 }
 
 function Divider() {
-  return <div className="mx-1 h-3.5 w-px bg-zinc-700/50" />;
+  return <div className="mx-1 h-3.5 w-px bg-zinc-300/50 dark:bg-zinc-700/50" />;
 }

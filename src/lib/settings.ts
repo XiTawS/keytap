@@ -1,8 +1,11 @@
 import type { KeyboardThemeName } from "@/components/ui/keyboard";
 import type { Language } from "@/lib/words";
 
+export type ColorMode = "dark" | "light";
+
 export interface Settings {
   theme: KeyboardThemeName;
+  colorMode: ColorMode;
   soundEnabled: boolean;
   volume: number; // 0-1
   language: Language;
@@ -13,6 +16,7 @@ const STORAGE_KEY = "keytest-settings";
 
 const DEFAULT_SETTINGS: Settings = {
   theme: "classic",
+  colorMode: "dark",
   soundEnabled: true,
   volume: 0.5,
   language: "en",

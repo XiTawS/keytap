@@ -183,14 +183,14 @@ export default function Home() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center animate-page-in">
         <div className="text-7xl mb-8">⌨️</div>
-        <h1 className="text-2xl font-semibold tracking-tight mb-3 text-zinc-100">
+        <h1 className="text-2xl font-semibold tracking-tight mb-3 text-zinc-900 dark:text-zinc-100">
           KeyTest is desktop only
         </h1>
         <p className="text-zinc-500 text-sm max-w-xs leading-relaxed">
           This typing test requires a physical keyboard. Please visit on a desktop computer.
         </p>
-        <div className="mt-8 h-px w-16 bg-zinc-800" />
-        <p className="mt-4 text-xs text-zinc-600 font-mono">
+        <div className="mt-8 h-px w-16 bg-zinc-200 dark:bg-zinc-800" />
+        <p className="mt-4 text-xs text-zinc-400 dark:text-zinc-600 font-mono">
           keytest.dev
         </p>
       </div>

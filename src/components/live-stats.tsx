@@ -29,7 +29,7 @@ export function LiveStats({
           {wpm}
         </span>
       </span>
-      <span className="text-lg tabular-nums text-zinc-600">
+      <span className="text-lg tabular-nums text-zinc-400 dark:text-zinc-600">
         {mode === "time" ? `${timeLeft}s` : `${elapsedSeconds}s`}
       </span>
     </div>

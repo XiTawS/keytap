@@ -31,8 +31,9 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} dark h-screen overflow-hidden antialiased`}
+      suppressHydrationWarning
     >
-      <body className="h-screen overflow-hidden flex flex-col bg-zinc-950 text-zinc-100 selection:bg-[var(--theme-accent)]/20">
+      <body className="h-screen overflow-hidden flex flex-col bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 selection:bg-[var(--theme-accent)]/20 transition-colors duration-200">
         <SettingsProvider>{children}</SettingsProvider>
       </body>
     </html>

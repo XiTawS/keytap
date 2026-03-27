@@ -141,7 +141,7 @@ export function TypingArea({
         {/* Unfocused overlay hint */}
         {!isFocused && !hasStarted && (
           <div className="absolute inset-0 z-10 flex items-center justify-center">
-            <span className="text-sm text-zinc-500 font-sans bg-zinc-950/80 px-4 py-2 rounded-md backdrop-blur-sm">
+            <span className="text-sm text-zinc-500 font-sans bg-white/80 dark:bg-zinc-950/80 px-4 py-2 rounded-md backdrop-blur-sm">
               Click here or start typing
             </span>
           </div>
@@ -165,10 +165,10 @@ export function TypingArea({
                   className={cn(
                     "relative transition-colors duration-75",
                     // Character colors
-                    charStates[wi]?.[ci] === "correct" && "text-zinc-200",
+                    charStates[wi]?.[ci] === "correct" && "text-zinc-800 dark:text-zinc-200",
                     charStates[wi]?.[ci] === "incorrect" &&
-                      "text-red-400 bg-red-500/10 rounded-sm",
-                    charStates[wi]?.[ci] === "pending" && "text-zinc-600",
+                      "text-red-500 dark:text-red-400 bg-red-500/10 rounded-sm",
+                    charStates[wi]?.[ci] === "pending" && "text-zinc-400 dark:text-zinc-600",
                     // Blinking cursor before current char
                     wi === currentWordIndex &&
                       ci === currentCharIndex &&
@@ -211,7 +211,7 @@ export function TypingArea({
       </div>
 
       {/* Shortcut hints */}
-      <div className="flex justify-center mt-4 text-xs text-zinc-600 font-mono gap-4">
+      <div className="flex justify-center mt-4 text-xs text-zinc-400 dark:text-zinc-600 font-mono gap-4">
         <span>tab + enter to restart</span>
         {mode === "infinite" && <span>esc to finish</span>}
       </div>
@@ -237,11 +237,11 @@ export function TypingArea({
         <div className="mt-8 text-center">
           <button
             onClick={onReset}
-            className="mt-4 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-md text-sm text-zinc-300 transition-colors"
+            className="mt-4 px-4 py-2 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded-md text-sm text-zinc-700 dark:text-zinc-300 transition-colors"
           >
             Try again
           </button>
-          <p className="mt-2 text-xs text-zinc-600 font-mono">tab + enter</p>
+          <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-600 font-mono">tab + enter</p>
         </div>
       )}
     </div>

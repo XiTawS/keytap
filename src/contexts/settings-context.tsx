@@ -59,6 +59,18 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     }
   }, [settings?.theme]);
 
+  // Toggle dark/light mode class on <html>
+  useEffect(() => {
+    if (settings) {
+      const html = document.documentElement;
+      if (settings.colorMode === "dark") {
+        html.classList.add("dark");
+      } else {
+        html.classList.remove("dark");
+      }
+    }
+  }, [settings?.colorMode]);
+
   // Don't render until settings loaded from localStorage
   if (!settings) return null;
 

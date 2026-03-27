@@ -128,7 +128,7 @@ function WpmChart({ history }: { history: WpmSnapshot[] }) {
 
   if (history.length < 2) {
     return (
-      <div className="w-full h-40 flex items-center justify-center text-zinc-600 text-sm font-mono">
+      <div className="w-full h-40 flex items-center justify-center text-zinc-400 dark:text-zinc-600 text-sm font-mono">
         Not enough data for chart
       </div>
     );
@@ -171,7 +171,7 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
         >
           {results.wpm}
         </div>
-        <div className="text-zinc-600 text-xs mt-1 font-mono tracking-widest uppercase">
+        <div className="text-zinc-400 dark:text-zinc-600 text-xs mt-1 font-mono tracking-widest uppercase">
           words per minute
         </div>
       </div>
@@ -179,7 +179,7 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
       {/* Chart + Stats side by side */}
       <div className="flex gap-4 mb-4">
         {/* WPM Chart */}
-        <div className="flex-1 bg-zinc-900/40 rounded-xl p-3 border border-zinc-800/50">
+        <div className="flex-1 bg-zinc-100/40 dark:bg-zinc-900/40 rounded-xl p-3 border border-zinc-200/50 dark:border-zinc-800/50 transition-colors duration-200">
           <WpmChart history={results.wpmHistory} />
         </div>
 
@@ -205,8 +205,8 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
             value={
               <span className="font-mono">
                 <span className="text-green-400">{results.correctWords}</span>
-                <span className="text-zinc-700"> / </span>
-                <span className="text-zinc-400">{results.totalWords}</span>
+                <span className="text-zinc-400 dark:text-zinc-700"> / </span>
+                <span className="text-zinc-600 dark:text-zinc-400">{results.totalWords}</span>
               </span>
             }
             sublabel="correct / total"
@@ -216,11 +216,11 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
             value={
               <span className="font-mono text-xs">
                 <span className="text-green-400">{results.correctChars}</span>
-                <span className="text-zinc-700">/</span>
+                <span className="text-zinc-400 dark:text-zinc-700">/</span>
                 <span className="text-red-400">{results.incorrectChars}</span>
-                <span className="text-zinc-700">/</span>
+                <span className="text-zinc-400 dark:text-zinc-700">/</span>
                 <span className="text-yellow-400">{results.extraChars}</span>
-                <span className="text-zinc-700">/</span>
+                <span className="text-zinc-400 dark:text-zinc-700">/</span>
                 <span className="text-zinc-500">{results.missedChars}</span>
               </span>
             }
@@ -234,7 +234,7 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
       <div className="flex items-center justify-center gap-3">
         <button
           onClick={onNextTest}
-          className="px-6 py-1.5 rounded-lg bg-zinc-800/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-all duration-200 text-sm font-medium border border-zinc-800/50"
+          className="px-6 py-1.5 rounded-lg bg-zinc-200/60 dark:bg-zinc-800/60 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-800 dark:hover:text-zinc-200 transition-all duration-200 text-sm font-medium border border-zinc-200/50 dark:border-zinc-800/50"
         >
           Next test
         </button>
@@ -249,7 +249,7 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
         >
           Restart
         </button>
-        <span className="text-zinc-700 text-xs font-mono ml-2">tab + enter</span>
+        <span className="text-zinc-400 dark:text-zinc-700 text-xs font-mono ml-2">tab + enter</span>
       </div>
     </div>
   );
@@ -269,13 +269,13 @@ function StatCard({
   wide?: boolean;
 }) {
   return (
-    <div className={`bg-zinc-900/40 rounded-xl p-3 border border-zinc-800/50 ${wide ? "col-span-2" : ""}`}>
-      <div className="text-zinc-600 text-[10px] mb-1 font-mono tracking-wider uppercase">
+    <div className={`bg-zinc-100/40 dark:bg-zinc-900/40 rounded-xl p-3 border border-zinc-200/50 dark:border-zinc-800/50 transition-colors duration-200 ${wide ? "col-span-2" : ""}`}>
+      <div className="text-zinc-400 dark:text-zinc-600 text-[10px] mb-1 font-mono tracking-wider uppercase">
         {label}
       </div>
       <div className={`text-lg font-bold font-mono ${color ?? ""}`}>{value}</div>
       {sublabel && (
-        <div className="text-zinc-700 text-[9px] mt-1 font-mono">{sublabel}</div>
+        <div className="text-zinc-400 dark:text-zinc-700 text-[9px] mt-1 font-mono">{sublabel}</div>
       )}
     </div>
   );
