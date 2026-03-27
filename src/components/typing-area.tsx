@@ -42,23 +42,38 @@ export function TypingArea({
     return () => document.removeEventListener("mousedown", refocus);
   }, []);
 
-  // Auto-scroll to keep active word visible
+  // Track previous line top to detect line changes
+  const prevLineTopRef = useRef<number | null>(null);
+
+  // Reset scroll and line tracking on test reset
+  useEffect(() => {
+    prevLineTopRef.current = null;
+    if (wordsContainerRef.current) {
+      wordsContainerRef.current.scrollTo({ top: 0 });
+    }
+  }, [words]);
+
+  // Auto-scroll to keep active word on the first visible line
   useEffect(() => {
     if (activeWordRef.current && wordsContainerRef.current) {
       const container = wordsContainerRef.current;
       const activeWord = activeWordRef.current;
-      const containerRect = container.getBoundingClientRect();
-      const wordRect = activeWord.getBoundingClientRect();
 
-      const relativeTop = wordRect.top - containerRect.top;
-      const lineHeight = wordRect.height + 8;
+      const wordOffsetTop = activeWord.offsetTop;
 
-      if (relativeTop > lineHeight * 1.5) {
-        container.scrollTo({
-          top: container.scrollTop + relativeTop - lineHeight * 0.5,
-          behavior: "smooth",
-        });
+      // Detect if the word moved to a new line
+      if (prevLineTopRef.current !== null && wordOffsetTop !== prevLineTopRef.current) {
+        // Scroll so the active word sits at the top of the container
+        // but skip scrolling for the very first line (offsetTop ~ 0)
+        if (wordOffsetTop > 0) {
+          container.scrollTo({
+            top: wordOffsetTop,
+            behavior: "smooth",
+          });
+        }
       }
+
+      prevLineTopRef.current = wordOffsetTop;
     }
   }, [currentWordIndex]);
 
