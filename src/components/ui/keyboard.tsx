@@ -55,6 +55,8 @@ export interface KeyboardProps {
   theme?: KeyboardThemeName;
   enableHaptics?: boolean;
   enableSound?: boolean;
+  /** Volume level from 0 (muted) to 1 (full). Default 0.5. */
+  volume?: number;
   soundUrl?: string;
   onKeyEvent?: (event: KeyboardInteractionEvent) => void;
   /** Set of key codes to show in error/red state */
@@ -70,6 +72,7 @@ export function Keyboard({
   theme = "classic",
   enableSound = true,
   enableHaptics = true,
+  volume = 0.5,
   soundUrl = "/sounds/sound.ogg",
   onKeyEvent,
   errorKeys,
@@ -83,6 +86,7 @@ export function Keyboard({
       theme={theme}
       enableSound={enableSound}
       enableHaptics={enableHaptics}
+      volume={volume}
       soundUrl={soundUrl}
       onKeyEvent={onKeyEvent}
       errorKeys={errorKeys ?? EMPTY_SET}
@@ -129,6 +133,7 @@ interface KeyboardProviderProps {
   theme: KeyboardThemeName;
   enableSound: boolean;
   enableHaptics: boolean;
+  volume: number;
   soundUrl: string;
   onKeyEvent?: (event: KeyboardInteractionEvent) => void;
   errorKeys: Set<string>;
@@ -141,6 +146,7 @@ function KeyboardProvider({
   theme,
   enableSound,
   enableHaptics,
+  volume,
   soundUrl,
   onKeyEvent,
   errorKeys,
@@ -148,6 +154,7 @@ function KeyboardProvider({
 }: KeyboardProviderProps) {
   const audioContextRef = useRef<AudioContext | null>(null);
   const audioBufferRef = useRef<AudioBuffer | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
   const pressedKeysRef = useRef<Set<string>>(new Set());
   const { trigger } = useWebHaptics();
 
@@ -167,6 +174,11 @@ function KeyboardProvider({
       try {
         const audioContext = new AudioContext();
         audioContextRef.current = audioContext;
+
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = volume;
+        gainNode.connect(audioContext.destination);
+        gainNodeRef.current = gainNode;
 
         const response = await fetch(soundUrl);
         if (!response.ok) {
@@ -189,12 +201,20 @@ function KeyboardProvider({
     return () => {
       cancelled = true;
       audioBufferRef.current = null;
+      gainNodeRef.current = null;
 
       const context = audioContextRef.current;
       audioContextRef.current = null;
       void context?.close();
     };
   }, [enableSound, soundUrl]);
+
+  // Update gain node when volume changes
+  useEffect(() => {
+    if (gainNodeRef.current) {
+      gainNodeRef.current.gain.value = volume;
+    }
+  }, [volume]);
 
   const playSound = useCallback(
     (phase: KeyboardEventPhase, keyCode: string) => {
@@ -222,7 +242,7 @@ function KeyboardProvider({
 
       const source = audioContext.createBufferSource();
       source.buffer = audioBuffer;
-      source.connect(audioContext.destination);
+      source.connect(gainNodeRef.current ?? audioContext.destination);
       source.start(0, startMs / 1000, durationMs / 1000);
     },
     [enableSound],

@@ -3,25 +3,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Keyboard,
-  type KeyboardThemeName,
   type KeyboardInteractionEvent,
 } from "@/components/ui/keyboard";
 import { TypingArea } from "@/components/typing-area";
 import { ModeSelector } from "@/components/mode-selector";
 import { LiveStats } from "@/components/live-stats";
 import { ResultsScreen } from "@/components/results-screen";
+import { SettingsPanel } from "@/components/settings-panel";
 import { useTypingTest, type TestMode, type TimeLimit } from "@/hooks/use-typing-test";
 import { saveResult } from "@/lib/history";
+import { useSettings } from "@/contexts/settings-context";
 import type { Language } from "@/lib/words";
-
-const THEMES: KeyboardThemeName[] = [
-  "classic",
-  "mint",
-  "royal",
-  "dolch",
-  "sand",
-  "scarlet",
-];
 
 // Map expected characters to their KeyboardEvent.code equivalents
 function charToKeyCode(char: string): string | null {
@@ -46,9 +38,10 @@ function charToKeyCode(char: string): string | null {
 }
 
 export default function Home() {
+  const { settings } = useSettings();
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
-  const [theme, setTheme] = useState<KeyboardThemeName>("classic");
-  const [language, setLanguage] = useState<Language>("en");
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [language, setLanguage] = useState(settings.language);
   const [mode, setMode] = useState<TestMode>("time");
   const [timeLimit, setTimeLimit] = useState<TimeLimit>(30);
   const [errorKeys, setErrorKeys] = useState<Set<string>>(new Set());
@@ -175,6 +168,11 @@ export default function Home() {
     []
   );
 
+  // Sync language from settings when changed in panel
+  useEffect(() => {
+    setLanguage(settings.language);
+  }, [settings.language]);
+
   // Reset when mode, timeLimit, or language changes
   useEffect(() => {
     typing.reset();
@@ -194,22 +192,22 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center min-h-screen">
-      {/* Top bar: theme selector */}
-      <div className="fixed top-4 right-4 flex gap-2 z-10">
-        {THEMES.map((t) => (
-          <button
-            key={t}
-            onClick={() => setTheme(t)}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium capitalize transition-colors ${
-              theme === t
-                ? "bg-zinc-100 text-zinc-900"
-                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200"
-            }`}
-          >
-            {t}
-          </button>
-        ))}
+      {/* Top bar: gear icon */}
+      <div className="fixed top-4 right-4 z-10">
+        <button
+          onClick={() => setSettingsOpen(true)}
+          className="p-2 rounded-md bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200 transition-colors"
+          aria-label="Open settings"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
       </div>
+
+      {/* Settings panel */}
+      <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
 
       {/* Typing area - centered */}
       <div className="flex-1 flex flex-col items-center justify-center w-full px-8">
@@ -266,7 +264,10 @@ export default function Home() {
       {/* Keyboard */}
       <div className="pb-8">
         <Keyboard
-          theme={theme}
+          theme={settings.theme}
+          enableSound={settings.soundEnabled}
+          enableHaptics={settings.haptics}
+          volume={settings.volume}
           onKeyEvent={handleKeyEvent}
           errorKeys={errorKeys}
           highlightKey={highlightKey}
