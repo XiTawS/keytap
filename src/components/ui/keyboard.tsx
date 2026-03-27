@@ -57,7 +57,13 @@ export interface KeyboardProps {
   enableSound?: boolean;
   soundUrl?: string;
   onKeyEvent?: (event: KeyboardInteractionEvent) => void;
+  /** Set of key codes to show in error/red state */
+  errorKeys?: Set<string>;
+  /** Key code to subtly highlight as the expected next key */
+  highlightKey?: string;
 }
+
+const EMPTY_SET = new Set<string>();
 
 export function Keyboard({
   className,
@@ -66,6 +72,8 @@ export function Keyboard({
   enableHaptics = true,
   soundUrl = "/sounds/sound.ogg",
   onKeyEvent,
+  errorKeys,
+  highlightKey,
 }: KeyboardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -77,6 +85,8 @@ export function Keyboard({
       enableHaptics={enableHaptics}
       soundUrl={soundUrl}
       onKeyEvent={onKeyEvent}
+      errorKeys={errorKeys ?? EMPTY_SET}
+      highlightKey={highlightKey}
     >
       <div ref={containerRef} className={cn("inline-block", className)}>
         <KeyboardLayout />
@@ -99,6 +109,8 @@ interface KeyboardContextType {
   pressKey: (keyCode: string, source: KeyboardEventSource) => void;
   releaseKey: (keyCode: string, source: KeyboardEventSource) => void;
   releaseAllKeys: (source?: KeyboardEventSource) => void;
+  errorKeys: Set<string>;
+  highlightKey?: string;
 }
 
 const KeyboardContext = createContext<KeyboardContextType | null>(null);
@@ -119,6 +131,8 @@ interface KeyboardProviderProps {
   enableHaptics: boolean;
   soundUrl: string;
   onKeyEvent?: (event: KeyboardInteractionEvent) => void;
+  errorKeys: Set<string>;
+  highlightKey?: string;
 }
 
 function KeyboardProvider({
@@ -129,6 +143,8 @@ function KeyboardProvider({
   enableHaptics,
   soundUrl,
   onKeyEvent,
+  errorKeys,
+  highlightKey,
 }: KeyboardProviderProps) {
   const audioContextRef = useRef<AudioContext | null>(null);
   const audioBufferRef = useRef<AudioBuffer | null>(null);
@@ -356,6 +372,8 @@ function KeyboardProvider({
         pressKey,
         releaseKey,
         releaseAllKeys,
+        errorKeys,
+        highlightKey,
       }}
     >
       {children}
@@ -667,8 +685,10 @@ function Key({
   className,
   keyCode,
 }: KeyProps) {
-  const { themeName, pressedKeys, pressKey, releaseKey, triggerPointerHaptic } = useKeyboardContext();
+  const { themeName, pressedKeys, pressKey, releaseKey, triggerPointerHaptic, errorKeys, highlightKey } = useKeyboardContext();
   const isPressed = keyCode ? pressedKeys.has(keyCode) : false;
+  const isError = keyCode ? errorKeys.has(keyCode) : false;
+  const isHighlighted = keyCode ? keyCode === highlightKey : false;
   const keyVariantSlot = resolveKeyVariant(themeName, keyCode);
   const keyVariant = KEYBOARD_THEMES[themeName].variants[keyVariantSlot];
 
@@ -721,12 +741,14 @@ function Key({
           className={cn(
             "relative z-10 h-[37px] rounded-[6px] border border-t-0 border-black/40 transition-all duration-100",
             "text-[9px] font-medium flex flex-col items-center justify-between p-1 gap-0.5 select-none",
+            isError && "ring-2 ring-red-500 ring-inset",
+            isHighlighted && "ring-1 ring-zinc-400/40 ring-inset",
             className,
           )}
           style={{
             width: `${width - 13}px`,
-            backgroundColor: keyVariant.bg,
-            color: keyVariant.text,
+            backgroundColor: isError ? "#dc2626" : keyVariant.bg,
+            color: isError ? "#fff" : keyVariant.text,
           }}
         >
           {children}
