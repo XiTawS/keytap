@@ -25,6 +25,7 @@ export interface UseTypingTestOptions {
   language: Language;
   mode: TestMode;
   timeLimit: TimeLimit;
+  initialWords?: string[];
 }
 
 function wordCountForMode(mode: TestMode, timeLimit: TimeLimit): number {
@@ -72,11 +73,12 @@ export function useTypingTest({
   language,
   mode,
   timeLimit,
+  initialWords: providedWords,
 }: UseTypingTestOptions): UseTypingTestReturn {
   const wordCount = wordCountForMode(mode, timeLimit);
 
   const [initialWords] = useState<string[]>(() =>
-    generateWords(language, wordCount)
+    providedWords ?? generateWords(language, wordCount)
   );
   const [words, setWords] = useState<string[]>(initialWords);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -244,7 +246,7 @@ export function useTypingTest({
   }, [isActive]);
 
   const reset = useCallback(() => {
-    const newWords = generateWords(language, wordCount);
+    const newWords = providedWords ?? generateWords(language, wordCount);
     setWords(newWords);
     setCurrentWordIndex(0);
     setCurrentCharIndex(0);

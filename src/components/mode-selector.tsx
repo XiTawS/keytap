@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { Swords } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { TestMode, TimeLimit } from "@/hooks/use-typing-test";
 import type { Language } from "@/lib/words";
@@ -65,6 +67,21 @@ export function ModeSelector({
       >
         {language}
       </PillButton>
+
+      {/* Divider */}
+      <Divider />
+
+      {/* Duel mode link */}
+      <Link
+        href="/duel"
+        className={cn(
+          "rounded-lg px-3 py-1 transition-all duration-150 flex items-center gap-1.5",
+          "text-zinc-400 dark:text-zinc-500 hover:text-[var(--theme-accent)]"
+        )}
+      >
+        <Swords size={13} />
+        duel
+      </Link>
     </div>
   );
 }
