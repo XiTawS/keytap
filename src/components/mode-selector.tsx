@@ -66,8 +66,11 @@ export function ModeSelector({
         </Option>
       </div>
 
+      {/* Divider before multiplayer */}
+      <Divider />
+
       {/* Multiplayer icons — subtle, far right */}
-      <div className="flex items-center gap-1 ml-4">
+      <div className="flex items-center gap-1">
         <Link
           href="/duel"
           title="1v1 Duel"
