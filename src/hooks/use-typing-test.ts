@@ -29,10 +29,10 @@ export interface UseTypingTestOptions {
 }
 
 function wordCountForMode(mode: TestMode, timeLimit: TimeLimit): number {
-  if (mode === "infinite") return 200;
-  // Estimate ~80 WPM max * avg 5 chars/word, generate plenty
-  const estimatedWords = Math.ceil((80 * timeLimit) / 60);
-  return Math.max(estimatedWords, 50);
+  if (mode === "infinite") return 300;
+  // Estimate ~150 WPM for fast typists, generate plenty
+  const estimatedWords = Math.ceil((150 * timeLimit) / 60);
+  return Math.max(estimatedWords, 200);
 }
 
 export interface TestResults {
@@ -416,8 +416,8 @@ export function useTypingTest({
 
         const nextIndex = state.currentWordIndex + 1;
 
-        // In time mode, generate more words dynamically when running low
-        if (mode === "time" && nextIndex >= state.words.length - 10) {
+        // Generate more words dynamically when running low (any mode)
+        if (nextIndex >= state.words.length - 20) {
           const moreWords = generateWords(language, 50);
           const newWords = [...state.words, ...moreWords];
           const newCharStates = [
