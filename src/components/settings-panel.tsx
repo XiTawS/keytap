@@ -41,7 +41,7 @@ export function SettingsPanel() {
   const { settings, updateSettings } = useSettings();
 
   return (
-    <div className="settings-panel shrink-0 w-full px-6 py-3 pb-8">
+    <div className="settings-panel shrink-0 w-full px-6 py-3 pb-12">
       <div className="settings-inner flex flex-col items-center gap-2">
         {/* Row 1: Theme names */}
         <div className="flex items-center gap-1">
