@@ -138,7 +138,7 @@ export default function DuelPage() {
   return (
     <div className="flex flex-col items-center h-screen overflow-hidden animate-page-in">
       {/* Header */}
-      <div className="w-full max-w-3xl mx-auto px-8 pt-6 pb-4 flex items-center gap-4">
+      <div className="duel-header w-full max-w-3xl mx-auto px-8 pt-6 pb-4 flex items-center gap-4">
         <Link href="/">
           <Button variant="ghost" size="icon-sm">
             <ArrowLeft size={18} />

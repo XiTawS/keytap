@@ -131,7 +131,7 @@ export function TypingArea({
       <div
         ref={wordsContainerRef}
         className={cn(
-          "relative h-[7.5rem] overflow-hidden font-mono text-[1.35rem] leading-[2.2] cursor-text rounded-lg px-1 transition-all duration-300",
+          "typing-display relative overflow-hidden font-mono cursor-text rounded-lg px-1 transition-all duration-300",
           isFocused
             ? "opacity-100"
             : "opacity-50"
@@ -211,7 +211,7 @@ export function TypingArea({
       </div>
 
       {/* Shortcut hints */}
-      <div className="flex justify-center mt-4 text-xs text-zinc-400 dark:text-zinc-600 font-mono gap-4">
+      <div className="flex justify-center mt-2 text-xs text-zinc-400 dark:text-zinc-600 font-mono gap-4">
         <span>tab + enter to restart</span>
         {mode === "infinite" && <span>esc to finish</span>}
       </div>

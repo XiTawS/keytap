@@ -205,7 +205,7 @@ export default function Home() {
       {/* Main content — flex-1 to fill remaining space */}
       <div className="flex-1 flex flex-col items-center justify-center w-full max-w-5xl mx-auto px-8 min-h-0">
         {/* Mode selector — compact, Monkeytype style */}
-        <div className="mb-4 shrink-0">
+        <div className="mb-2 shrink-0">
           <ModeSelector
             mode={mode}
             timeLimit={timeLimit}
@@ -225,7 +225,7 @@ export default function Home() {
         ) : (
           <>
             {/* Live stats */}
-            <div className="mb-3 h-10 flex items-center shrink-0">
+            <div className="mb-2 h-8 flex items-center shrink-0">
               <LiveStats
                 wpm={typing.stats.wpm}
                 timeLeft={typing.timeLeft}
@@ -253,7 +253,7 @@ export default function Home() {
       </div>
 
       {/* Keyboard — centered at bottom, pointer-events-none to never steal focus */}
-      <div className="pb-2 pt-1 mb-4 pointer-events-none shrink-0">
+      <div className="pb-2 pt-1 pointer-events-none shrink-0 keyboard-wrapper">
         <Keyboard
           theme={settings.theme}
           enableSound={settings.soundEnabled}

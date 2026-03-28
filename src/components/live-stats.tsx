@@ -23,13 +23,13 @@ export function LiveStats({
     <div className="flex items-center gap-6 font-mono text-sm animate-in fade-in duration-300">
       <span className="text-zinc-500">
         <span
-          className="text-3xl font-bold transition-all duration-200"
+          className="live-stats-wpm text-3xl font-bold transition-all duration-200"
           style={{ color: "var(--theme-accent)" }}
         >
           {wpm}
         </span>
       </span>
-      <span className="text-lg tabular-nums text-zinc-400 dark:text-zinc-600">
+      <span className="live-stats-time text-lg tabular-nums text-zinc-400 dark:text-zinc-600">
         {mode === "time" ? `${timeLeft}s` : `${elapsedSeconds}s`}
       </span>
     </div>

@@ -134,7 +134,7 @@ function WpmChart({ history }: { history: WpmSnapshot[] }) {
     );
   }
 
-  return <canvas ref={canvasRef} className="w-full h-40" />;
+  return <canvas ref={canvasRef} className="results-chart w-full h-40" />;
 }
 
 export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenProps) {
@@ -166,7 +166,7 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
       {/* Big WPM — accent colored */}
       <div className="text-center mb-4">
         <div
-          className="text-6xl font-bold font-mono tracking-tight"
+          className="results-wpm text-6xl font-bold font-mono tracking-tight"
           style={{ color: "var(--theme-accent)" }}
         >
           {results.wpm}
@@ -184,7 +184,7 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
         </div>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-2 gap-2 w-72 shrink-0">
+        <div className="results-stats-grid grid grid-cols-2 gap-2 w-72 shrink-0">
           <StatCard
             label="raw"
             value={String(results.rawWpm)}

@@ -221,11 +221,11 @@ export function DuelGame({
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
+    <div className="duel-context w-full max-w-3xl mx-auto">
       {showCountdown && <DuelCountdown onComplete={handleCountdownComplete} />}
 
       {/* Timer */}
-      <div className="mb-4 flex items-center justify-center">
+      <div className="mb-2 flex items-center justify-center">
         <LiveStats
           wpm={typing.stats.wpm}
           timeLeft={typing.timeLeft}
@@ -258,7 +258,7 @@ export function DuelGame({
       </div>
 
       {/* Divider */}
-      <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-4" />
+      <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-2" />
 
       {/* Opponent typing area */}
       <OpponentTypingArea

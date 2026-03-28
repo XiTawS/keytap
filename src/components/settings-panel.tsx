@@ -41,8 +41,8 @@ export function SettingsPanel() {
   const { settings, updateSettings } = useSettings();
 
   return (
-    <div className="shrink-0 w-full px-6 py-3">
-      <div className="flex flex-col items-center gap-3">
+    <div className="settings-panel shrink-0 w-full px-6 py-3">
+      <div className="settings-inner flex flex-col items-center gap-3">
         {/* Row 1: Theme names */}
         <div className="flex items-center gap-1">
           {THEMES.map((t) => {
@@ -51,7 +51,7 @@ export function SettingsPanel() {
               <button
                 key={t.name}
                 onClick={() => updateSettings({ theme: t.name })}
-                className={`px-3 py-1 rounded-full text-sm transition-all duration-150 ${
+                className={`theme-btn px-3 py-1 rounded-full text-sm transition-all duration-150 ${
                   isSelected
                     ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-medium"
                     : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"

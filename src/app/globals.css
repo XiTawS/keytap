@@ -183,3 +183,146 @@
 .animate-overlay-in {
   animation: overlay-in 0.2s ease-out;
 }
+
+/* ─── Small desktop responsiveness ─── */
+
+/* Keyboard scaling for short viewports */
+.keyboard-wrapper {
+  transform-origin: center bottom;
+}
+
+@media (max-height: 900px) {
+  .keyboard-wrapper {
+    transform: scale(0.9);
+    margin-bottom: -10px;
+  }
+}
+
+@media (max-height: 800px) {
+  .keyboard-wrapper {
+    transform: scale(0.8);
+    margin-bottom: -25px;
+  }
+}
+
+@media (max-height: 720px) {
+  .keyboard-wrapper {
+    transform: scale(0.7);
+    margin-bottom: -40px;
+  }
+}
+
+/* Typing area responsive sizing */
+.typing-display {
+  height: 7.5rem;
+  font-size: 1.35rem;
+  line-height: 2.2;
+}
+
+@media (max-height: 800px) {
+  .typing-display {
+    height: 6rem;
+    font-size: 1.15rem;
+    line-height: 2;
+  }
+}
+
+@media (max-height: 720px) {
+  .typing-display {
+    height: 5rem;
+    font-size: 1.05rem;
+    line-height: 1.9;
+  }
+}
+
+/* Live stats responsive sizing */
+@media (max-height: 800px) {
+  .live-stats-wpm {
+    font-size: 1.5rem !important;
+  }
+  .live-stats-time {
+    font-size: 1rem !important;
+  }
+}
+
+/* Settings panel compact on short screens */
+@media (max-height: 800px) {
+  .settings-panel {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+  .settings-panel .settings-inner {
+    gap: 0.25rem;
+  }
+  .settings-panel .theme-btn {
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Results screen compact */
+@media (max-height: 800px) {
+  .results-wpm {
+    font-size: 3rem !important;
+  }
+  .results-chart {
+    height: 7rem !important;
+  }
+  .results-stats-grid {
+    width: 14rem !important;
+  }
+}
+
+/* Duel typing areas — base + responsive */
+.duel-typing-display {
+  height: 7.5rem;
+  font-size: 1.35rem;
+  line-height: 2.2;
+}
+
+@media (max-height: 800px) {
+  .duel-typing-display {
+    height: 5rem;
+    font-size: 1.05rem;
+    line-height: 1.9;
+  }
+}
+
+@media (max-height: 720px) {
+  .duel-typing-display {
+    height: 4rem;
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+}
+
+/* In duel context, typing-display is also smaller */
+.duel-context .typing-display {
+  height: 7.5rem;
+  font-size: 1.35rem;
+  line-height: 2.2;
+}
+
+@media (max-height: 800px) {
+  .duel-context .typing-display {
+    height: 5rem;
+    font-size: 1.05rem;
+    line-height: 1.9;
+  }
+}
+
+@media (max-height: 720px) {
+  .duel-context .typing-display {
+    height: 4rem;
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+}
+
+/* Duel header compact on short screens */
+@media (max-height: 800px) {
+  .duel-header {
+    padding-top: 0.75rem;
+    padding-bottom: 0.5rem;
+  }
+}

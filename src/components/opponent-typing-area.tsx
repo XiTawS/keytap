@@ -50,7 +50,7 @@ export function OpponentTypingArea({
       </div>
       <div
         ref={containerRef}
-        className="relative h-[7.5rem] overflow-hidden font-mono text-[1.35rem] leading-[2.2] rounded-lg px-1 opacity-70"
+        className="duel-typing-display relative overflow-hidden font-mono rounded-lg px-1 opacity-70"
       >
         <div className="flex flex-wrap gap-x-2.5 gap-y-1">
           {words.map((word, wi) => (
