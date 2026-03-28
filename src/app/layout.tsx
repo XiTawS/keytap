@@ -34,7 +34,17 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="h-screen overflow-hidden flex flex-col bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 selection:bg-[var(--theme-accent)]/20 transition-colors duration-200">
-        <SettingsProvider>{children}</SettingsProvider>
+        <SettingsProvider>
+          {children}
+          <a
+            href="https://x.com/_XiTawS"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="fixed bottom-3 right-4 text-xs text-zinc-500 hover:text-zinc-300 transition-colors z-50 font-mono"
+          >
+            Made by @XiTawS
+          </a>
+        </SettingsProvider>
       </body>
     </html>
   );
