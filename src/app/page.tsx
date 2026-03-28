@@ -220,8 +220,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Main content — flex-1 to fill remaining space */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full max-w-5xl mx-auto px-8 min-h-0">
+      {/* Main content — flex-1, push content toward bottom (closer to keyboard) */}
+      <div className="flex-1 flex flex-col items-center justify-end w-full max-w-5xl mx-auto px-8 min-h-0 pb-4">
         {/* Mode selector — compact, Monkeytype style */}
         <div className="mb-2 shrink-0">
           <ModeSelector
