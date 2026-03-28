@@ -29,7 +29,7 @@ function IconButton({
       onClick={onClick}
       aria-label={label}
       className={`p-1.5 transition-colors ${
-        active ? "text-white dark:text-white" : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-400"
+        active ? "text-zinc-900 dark:text-white" : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-400"
       }`}
     >
       {children}
@@ -41,8 +41,8 @@ export function SettingsPanel() {
   const { settings, updateSettings } = useSettings();
 
   return (
-    <div className="settings-panel shrink-0 w-full px-6 py-3">
-      <div className="settings-inner flex flex-col items-center gap-3">
+    <div className="settings-panel shrink-0 w-full px-6 py-1">
+      <div className="settings-inner flex flex-col items-center gap-2">
         {/* Row 1: Theme names */}
         <div className="flex items-center gap-1">
           {THEMES.map((t) => {
