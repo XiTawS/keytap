@@ -260,8 +260,9 @@ export function subscribeToBattle(
   battleId: string,
   callback: (battle: Battle) => void
 ): RealtimeChannel {
+  const uid = Math.random().toString(36).slice(2, 8);
   return supabase
-    .channel(`battle-${battleId}`)
+    .channel(`battle-${battleId}-${uid}`)
     .on(
       "postgres_changes",
       {
@@ -281,8 +282,9 @@ export function subscribeToPlayers(
   battleId: string,
   callback: (player: BattlePlayer) => void
 ): RealtimeChannel {
+  const uid = Math.random().toString(36).slice(2, 8);
   return supabase
-    .channel(`battle-players-${battleId}`)
+    .channel(`battle-players-${battleId}-${uid}`)
     .on(
       "postgres_changes",
       {

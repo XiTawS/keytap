@@ -189,6 +189,35 @@ export function BattleGame({
     };
   }, [isHost, gameStarted, battleFinished, battle, playerId]);
 
+  // Non-host: local elimination timer for UI display
+  useEffect(() => {
+    if (isHost || !gameStarted || battleFinished) return;
+
+    let round = 0;
+    let currentInterval = battle.elimination_interval;
+    let timeUntilNext = currentInterval;
+
+    const timer = setInterval(() => {
+      timeUntilNext--;
+      setEliminationState({
+        round,
+        currentInterval,
+        timeUntilNext,
+        isRunning: true,
+      });
+
+      if (timeUntilNext <= 0) {
+        round++;
+        if (battle.elimination_mode === "accelerating") {
+          currentInterval = Math.max(5, currentInterval - 2);
+        }
+        timeUntilNext = currentInterval;
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isHost, gameStarted, battleFinished, battle.elimination_interval, battle.elimination_mode]);
+
   // Send progress updates every 200ms
   useEffect(() => {
     if (!gameStarted || isEliminated || battleFinished) return;
