@@ -122,6 +122,11 @@
   --theme-accent: #F57644;
 }
 
+/* Icon link hover — works reliably with CSS variables in Tailwind v4 */
+.icon-link:hover {
+  color: var(--theme-accent);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

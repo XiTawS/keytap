@@ -74,14 +74,14 @@ export function ModeSelector({
         <Link
           href="/duel"
           title="1v1 Duel"
-          className="text-zinc-400 dark:text-zinc-500 hover:text-[var(--theme-accent)] transition-colors duration-150 p-1"
+          className="icon-link text-zinc-400 dark:text-zinc-500 transition-colors duration-150 p-1"
         >
           <Swords size={15} />
         </Link>
         <Link
           href="/battle"
           title="Battle Royale"
-          className="text-zinc-400 dark:text-zinc-500 hover:text-[var(--theme-accent)] transition-colors duration-150 p-1"
+          className="icon-link text-zinc-400 dark:text-zinc-500 transition-colors duration-150 p-1"
         >
           <Crown size={15} />
         </Link>
