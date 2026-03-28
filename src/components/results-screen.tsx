@@ -238,17 +238,6 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
         >
           Restart
         </button>
-        <button
-          onClick={onNextTest}
-          className="px-6 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border"
-          style={{
-            backgroundColor: "var(--theme-accent)",
-            borderColor: "var(--theme-accent)",
-            color: "rgba(0,0,0,0.8)",
-          }}
-        >
-          New words
-        </button>
         <span className="text-zinc-400 dark:text-zinc-700 text-xs font-mono ml-2">tab + enter</span>
       </div>
     </div>
