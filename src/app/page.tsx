@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Monitor } from "lucide-react";
 import {
   Keyboard,
   type KeyboardInteractionEvent,
@@ -182,7 +183,9 @@ export default function Home() {
   if (!isDesktop) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center animate-page-in">
-        <div className="text-7xl mb-8">⌨️</div>
+        <div className="mb-8">
+          <Monitor size={64} className="text-zinc-400 dark:text-zinc-500" />
+        </div>
         <h1 className="text-2xl font-semibold tracking-tight mb-3 text-zinc-900 dark:text-zinc-100">
           KeyTest is desktop only
         </h1>
