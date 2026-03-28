@@ -385,8 +385,8 @@ function KeyboardProvider({
 function KeyboardLayout() {
   return (
     <div>
-      <div className="bg-black/70 border-2 border-zinc-700 dark:border-zinc-600 p-3 rounded-[16px] w-fit h-fit">
-        <div className="bg-black/80 border border-black rounded-[5px] rounded-t-[8px] h-[278px]">
+      <div className="bg-zinc-800 dark:bg-zinc-800 border-2 border-zinc-700 dark:border-zinc-700 p-3 rounded-[16px] w-fit h-fit">
+        <div className="bg-zinc-900 dark:bg-zinc-900 border border-zinc-800 dark:border-zinc-800 rounded-[5px] rounded-t-[8px] h-[278px]">
           <div className="-space-y-1 -translate-y-1 rounded-[5px] overflow-hidden">
             <Row>
               <Key keyCode={KEYCODE.Escape}>
