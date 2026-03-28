@@ -137,9 +137,9 @@ export default function Home() {
 
   const handleReset = useCallback(() => {
     resultsSavedRef.current = false;
-    typing.reset();
+    typing.retry();
     setErrorKeys(new Set());
-  }, [typing.reset]);
+  }, [typing.retry]);
 
   const handleNextTest = useCallback(() => {
     resultsSavedRef.current = false;
@@ -222,17 +222,19 @@ export default function Home() {
 
       {/* Main content — flex-1 to fill remaining space */}
       <div className="flex-1 flex flex-col items-center justify-center w-full max-w-5xl mx-auto px-8 min-h-0">
-        {/* Mode selector — compact, Monkeytype style */}
-        <div className="mb-2 shrink-0">
-          <ModeSelector
-            mode={mode}
-            timeLimit={timeLimit}
-            language={language}
-            onModeChange={handleModeChange}
-            onTimeLimitChange={handleTimeLimitChange}
-            onLanguageChange={handleLanguageChange}
-          />
-        </div>
+        {/* Mode selector — compact, Monkeytype style (hidden on results) */}
+        {!typing.isFinished && (
+          <div className="mb-2 shrink-0">
+            <ModeSelector
+              mode={mode}
+              timeLimit={timeLimit}
+              language={language}
+              onModeChange={handleModeChange}
+              onTimeLimitChange={handleTimeLimitChange}
+              onLanguageChange={handleLanguageChange}
+            />
+          </div>
+        )}
 
         {typing.isFinished ? (
           <ResultsScreen

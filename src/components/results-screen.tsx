@@ -233,13 +233,13 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
       {/* Actions */}
       <div className="flex items-center justify-center gap-3">
         <button
-          onClick={onNextTest}
+          onClick={onRestart}
           className="px-6 py-1.5 rounded-lg bg-zinc-200/60 dark:bg-zinc-800/60 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-800 dark:hover:text-zinc-200 transition-all duration-200 text-sm font-medium border border-zinc-200/50 dark:border-zinc-800/50"
         >
-          Next test
+          Restart
         </button>
         <button
-          onClick={onRestart}
+          onClick={onNextTest}
           className="px-6 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border"
           style={{
             backgroundColor: "var(--theme-accent)",
@@ -247,7 +247,7 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
             color: "rgba(0,0,0,0.8)",
           }}
         >
-          Restart
+          New words
         </button>
         <span className="text-zinc-400 dark:text-zinc-700 text-xs font-mono ml-2">tab + enter</span>
       </div>

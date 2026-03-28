@@ -66,6 +66,7 @@ export interface UseTypingTestReturn {
   getResults: () => TestResults;
   handleKeyDown: (key: string) => "correct" | "incorrect" | "control";
   reset: () => void;
+  retry: () => void;
   stopTest: () => void;
 }
 
@@ -96,7 +97,8 @@ type TypingAction =
   | { type: "TIMER_UPDATE"; stats: Partial<TypingStats> }
   | { type: "TIME_UP"; stats: Partial<TypingStats> }
   | { type: "STOP"; stats: Partial<TypingStats> }
-  | { type: "RESET"; words: string[]; wordCount: number };
+  | { type: "RESET"; words: string[]; wordCount: number }
+  | { type: "RETRY" };
 
 function typingReducer(state: TypingState, action: TypingAction): TypingState {
   switch (action.type) {
@@ -180,6 +182,22 @@ function typingReducer(state: TypingState, action: TypingAction): TypingState {
         extraChars: 0,
         charStates: action.words.map((w) => Array(w.length).fill("pending") as CharState[]),
         wordStates: states,
+        stats: { correctChars: 0, incorrectChars: 0, totalKeystrokes: 0, wpm: 0, elapsedSeconds: 0 },
+        isActive: false,
+        isFinished: false,
+      };
+    }
+    case "RETRY": {
+      const retryStates = Array(state.words.length).fill("pending") as WordState[];
+      retryStates[0] = "active";
+      return {
+        words: state.words,
+        currentWordIndex: 0,
+        currentCharIndex: 0,
+        typed: "",
+        extraChars: 0,
+        charStates: state.words.map((w) => Array(w.length).fill("pending") as CharState[]),
+        wordStates: retryStates,
         stats: { correctChars: 0, incorrectChars: 0, totalKeystrokes: 0, wpm: 0, elapsedSeconds: 0 },
         isActive: false,
         isFinished: false,
@@ -366,6 +384,20 @@ export function useTypingTest({
     if (wpmSnapshotRef.current) clearInterval(wpmSnapshotRef.current);
   }, [language, wordCount, mode, timeLimit]);
 
+  const retry = useCallback(() => {
+    dispatch({ type: "RETRY" });
+    setTimeLeft(mode === "time" ? timeLimit : 0);
+    setWpmHistory([]);
+    startTimeRef.current = null;
+    correctCharsRef.current = 0;
+    incorrectCharsRef.current = 0;
+    totalKeystrokesRef.current = 0;
+    extraCharsRef.current = 0;
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (countdownRef.current) clearInterval(countdownRef.current);
+    if (wpmSnapshotRef.current) clearInterval(wpmSnapshotRef.current);
+  }, [mode, timeLimit]);
+
   const handleKeyDown = useCallback(
     (key: string): "correct" | "incorrect" | "control" => {
       if (state.isFinished) return "control";
@@ -521,6 +553,7 @@ export function useTypingTest({
     getResults,
     handleKeyDown,
     reset,
+    retry,
     stopTest,
   };
 }

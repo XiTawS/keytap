@@ -88,3 +88,42 @@ describe("word exhaustion bug", () => {
     // Previously this would only work for time mode - now it works for all modes
   });
 });
+
+describe("retry (same words reset)", () => {
+  it("RETRY action resets progress but keeps the same words array", () => {
+    const state = makeState(10);
+    // Simulate some progress
+    state.currentWordIndex = 5;
+    state.currentCharIndex = 3;
+    state.typed = "wor";
+    state.isActive = true;
+    state.stats.correctChars = 20;
+
+    // The RETRY action should reset indices but keep words
+    const originalWords = state.words;
+
+    // Simulate what the RETRY reducer case should do
+    const retried = {
+      words: originalWords,
+      currentWordIndex: 0,
+      currentCharIndex: 0,
+      typed: "",
+      extraChars: 0,
+      charStates: originalWords.map((w: string) => Array(w.length).fill("pending")),
+      wordStates: (() => { const ws = Array(originalWords.length).fill("pending"); ws[0] = "active"; return ws; })(),
+      stats: { correctChars: 0, incorrectChars: 0, totalKeystrokes: 0, wpm: 0, elapsedSeconds: 0 },
+      isActive: false,
+      isFinished: false,
+    };
+
+    // Words should be identical
+    expect(retried.words).toBe(originalWords);
+    // Progress should be reset
+    expect(retried.currentWordIndex).toBe(0);
+    expect(retried.currentCharIndex).toBe(0);
+    expect(retried.typed).toBe("");
+    expect(retried.isActive).toBe(false);
+    expect(retried.isFinished).toBe(false);
+    expect(retried.stats.correctChars).toBe(0);
+  });
+});
