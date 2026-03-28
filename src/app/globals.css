@@ -326,3 +326,46 @@
     padding-bottom: 0.5rem;
   }
 }
+
+/* ─── Battle Royale ─── */
+
+/* Battle typing area — slightly smaller to fit leaderboard */
+.battle-context .typing-display {
+  height: 7rem;
+  font-size: 1.25rem;
+  line-height: 2.1;
+}
+
+@media (max-height: 800px) {
+  .battle-context .typing-display {
+    height: 5rem;
+    font-size: 1.05rem;
+    line-height: 1.9;
+  }
+}
+
+@media (max-height: 720px) {
+  .battle-context .typing-display {
+    height: 4rem;
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+}
+
+/* Battle header compact */
+@media (max-height: 800px) {
+  .battle-header {
+    padding-top: 0.75rem;
+    padding-bottom: 0.5rem;
+  }
+}
+
+/* Elimination flash */
+@keyframes elimination-flash {
+  0% { background-color: rgba(239, 68, 68, 0.2); }
+  100% { background-color: transparent; }
+}
+
+.animate-elimination-flash {
+  animation: elimination-flash 1s ease-out;
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Swords } from "lucide-react";
+import { Swords, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { TestMode, TimeLimit } from "@/hooks/use-typing-test";
 import type { Language } from "@/lib/words";
@@ -84,6 +84,18 @@ export function ModeSelector({
       >
         <Swords size={13} />
         duel
+      </Link>
+
+      {/* Battle Royale link */}
+      <Link
+        href="/battle"
+        className={cn(
+          "rounded-lg px-3 py-1 transition-all duration-150 flex items-center gap-1.5",
+          "border border-[var(--theme-accent)]/40 text-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/10 font-semibold"
+        )}
+      >
+        <Crown size={13} />
+        battle
       </Link>
     </div>
   );
