@@ -196,7 +196,7 @@ export function TypingArea({
               ))}
               {/* Cursor at end of word if typed past */}
               {wi === currentWordIndex &&
-                currentCharIndex === word.length &&
+                currentCharIndex >= word.length &&
                 isFocused && (
                   <span className="relative">
                     <span

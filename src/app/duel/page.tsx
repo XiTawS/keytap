@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Monitor, ArrowLeft, Copy, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DuelGame } from "@/components/duel-game";
@@ -13,8 +13,13 @@ import {
   type Duel,
 } from "@/lib/duel";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
+import type { Language } from "@/lib/words";
+import type { TimeLimit } from "@/hooks/use-typing-test";
 
 type DuelPhase = "lobby" | "waiting" | "playing";
+
+const TIME_OPTIONS: TimeLimit[] = [15, 30, 60, 120];
 
 export default function DuelPage() {
   const { settings } = useSettings();
@@ -27,6 +32,8 @@ export default function DuelPage() {
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [duelTimeLimit, setDuelTimeLimit] = useState<TimeLimit>(30);
+  const [duelLanguage, setDuelLanguage] = useState<Language>(settings.language);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1024);
@@ -55,7 +62,7 @@ export default function DuelPage() {
     setError("");
     setLoading(true);
     try {
-      const newDuel = await createDuel(playerId, settings.language, 30);
+      const newDuel = await createDuel(playerId, duelLanguage, duelTimeLimit);
       setDuel(newDuel);
       setIsPlayer1(true);
       setPhase("waiting");
@@ -64,7 +71,7 @@ export default function DuelPage() {
     } finally {
       setLoading(false);
     }
-  }, [playerId, settings.language]);
+  }, [playerId, duelLanguage, duelTimeLimit]);
 
   const handleJoin = useCallback(async () => {
     if (!joinCode.trim()) {
@@ -153,6 +160,53 @@ export default function DuelPage() {
       <div className="flex-1 flex flex-col items-center justify-center w-full max-w-3xl mx-auto px-8 min-h-0">
         {phase === "lobby" && (
           <div className="w-full max-w-sm mx-auto space-y-8 animate-page-in">
+            {/* Duel options */}
+            <div className="space-y-4">
+              {/* Time limit selector */}
+              <div className="flex items-center justify-center gap-1">
+                {TIME_OPTIONS.map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setDuelTimeLimit(t)}
+                    className={cn(
+                      "rounded-lg px-3 py-1.5 text-sm font-mono tabular-nums transition-all duration-150",
+                      duelTimeLimit === t
+                        ? "bg-[var(--theme-accent)] text-white"
+                        : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 bg-zinc-100/60 dark:bg-zinc-900/60"
+                    )}
+                  >
+                    {t}s
+                  </button>
+                ))}
+              </div>
+
+              {/* Language toggle */}
+              <div className="flex items-center justify-center gap-1">
+                <button
+                  onClick={() => setDuelLanguage("en")}
+                  className={cn(
+                    "rounded-lg px-4 py-1.5 text-sm font-semibold uppercase transition-all duration-150",
+                    duelLanguage === "en"
+                      ? "bg-[var(--theme-accent)] text-white"
+                      : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 bg-zinc-100/60 dark:bg-zinc-900/60"
+                  )}
+                >
+                  EN
+                </button>
+                <button
+                  onClick={() => setDuelLanguage("fr")}
+                  className={cn(
+                    "rounded-lg px-4 py-1.5 text-sm font-semibold uppercase transition-all duration-150",
+                    duelLanguage === "fr"
+                      ? "bg-[var(--theme-accent)] text-white"
+                      : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 bg-zinc-100/60 dark:bg-zinc-900/60"
+                  )}
+                >
+                  FR
+                </button>
+              </div>
+            </div>
+
             {/* Create */}
             <div className="text-center">
               <Button

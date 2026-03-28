@@ -68,15 +68,18 @@ export function ModeSelector({
         {language}
       </PillButton>
 
-      {/* Divider */}
-      <Divider />
+      {/* Spacer to push duel to far right */}
+      <div className="flex-1" />
 
-      {/* Duel mode link */}
+      {/* Duel divider — taller, more prominent */}
+      <div className="mx-2 h-5 w-px bg-zinc-300 dark:bg-zinc-700" />
+
+      {/* Duel mode link — accent outline style */}
       <Link
         href="/duel"
         className={cn(
           "rounded-lg px-3 py-1 transition-all duration-150 flex items-center gap-1.5",
-          "text-zinc-400 dark:text-zinc-500 hover:text-[var(--theme-accent)]"
+          "border border-[var(--theme-accent)]/40 text-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/10 font-semibold"
         )}
       >
         <Swords size={13} />

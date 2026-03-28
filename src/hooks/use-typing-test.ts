@@ -84,6 +84,7 @@ export function useTypingTest({
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [typed, setTyped] = useState("");
+  const [extraChars, setExtraChars] = useState(0);
   const [charStates, setCharStates] = useState<CharState[][]>(() =>
     initialWords.map((w) =>
       Array(w.length).fill("pending") as CharState[]
@@ -110,6 +111,7 @@ export function useTypingTest({
   const correctCharsRef = useRef(0);
   const incorrectCharsRef = useRef(0);
   const totalKeystrokesRef = useRef(0);
+  const extraCharsRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const wpmSnapshotRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -220,7 +222,7 @@ export function useTypingTest({
       accuracy,
       correctChars: correctCharsRef.current,
       incorrectChars: incorrectCharsRef.current,
-      extraChars: 0,
+      extraChars: extraCharsRef.current,
       missedChars,
       totalTime: Math.floor(elapsed),
       correctWords,
@@ -251,6 +253,7 @@ export function useTypingTest({
     setCurrentWordIndex(0);
     setCurrentCharIndex(0);
     setTyped("");
+    setExtraChars(0);
     setCharStates(
       newWords.map((w) => Array(w.length).fill("pending") as CharState[])
     );
@@ -272,6 +275,7 @@ export function useTypingTest({
     correctCharsRef.current = 0;
     incorrectCharsRef.current = 0;
     totalKeystrokesRef.current = 0;
+    extraCharsRef.current = 0;
     if (timerRef.current) clearInterval(timerRef.current);
     if (countdownRef.current) clearInterval(countdownRef.current);
     if (wpmSnapshotRef.current) clearInterval(wpmSnapshotRef.current);
@@ -291,9 +295,15 @@ export function useTypingTest({
 
       if (key === "Backspace") {
         if (currentCharIndex > 0) {
-          const newCharStates = charStates.map((row) => [...row]);
-          newCharStates[currentWordIndex][currentCharIndex - 1] = "pending";
-          setCharStates(newCharStates);
+          const word = words[currentWordIndex];
+          if (currentCharIndex > word.length) {
+            // Deleting an extra char beyond word length
+            setExtraChars((e) => Math.max(0, e - 1));
+          } else {
+            const newCharStates = charStates.map((row) => [...row]);
+            newCharStates[currentWordIndex][currentCharIndex - 1] = "pending";
+            setCharStates(newCharStates);
+          }
           setCurrentCharIndex(currentCharIndex - 1);
           setTyped(typed.slice(0, -1));
         }
@@ -310,6 +320,21 @@ export function useTypingTest({
         newWordStates[currentWordIndex] = isCorrect ? "correct" : "incorrect";
 
         const nextIndex = currentWordIndex + 1;
+
+        // In time mode, generate more words dynamically when running low
+        if (mode === "time" && nextIndex >= words.length - 10) {
+          const moreWords = generateWords(language, 50);
+          setWords((prev) => [...prev, ...moreWords]);
+          setCharStates((prev) => [
+            ...prev,
+            ...moreWords.map((w) => Array(w.length).fill("pending") as CharState[]),
+          ]);
+          setWordStates((prev) => [
+            ...prev,
+            ...Array(moreWords.length).fill("pending") as WordState[],
+          ]);
+        }
+
         if (nextIndex >= words.length) {
           setWordStates(newWordStates);
           setIsFinished(true);
@@ -324,6 +349,7 @@ export function useTypingTest({
         setCurrentWordIndex(nextIndex);
         setCurrentCharIndex(0);
         setTyped("");
+        setExtraChars(0);
         return "control";
       }
 
@@ -331,7 +357,21 @@ export function useTypingTest({
       if (key.length !== 1) return "control";
 
       const word = words[currentWordIndex];
-      if (currentCharIndex >= word.length) return "incorrect";
+
+      if (currentCharIndex >= word.length) {
+        // Extra char beyond word length — count as incorrect, allow typing to continue
+        incorrectCharsRef.current++;
+        extraCharsRef.current++;
+        setExtraChars((e) => e + 1);
+        setStats((prev) => ({
+          ...prev,
+          incorrectChars: incorrectCharsRef.current,
+          totalKeystrokes: totalKeystrokesRef.current,
+        }));
+        setCurrentCharIndex(currentCharIndex + 1);
+        setTyped(typed + key);
+        return "incorrect";
+      }
 
       const isCorrect = key === word[currentCharIndex];
       const newCharStates = charStates.map((row) => [...row]);
@@ -366,6 +406,7 @@ export function useTypingTest({
       words,
       charStates,
       wordStates,
+      language,
     ]
   );
 
