@@ -189,6 +189,8 @@
 /* Keyboard scaling for short viewports */
 .keyboard-wrapper {
   transform-origin: center bottom;
+  margin-bottom: -20px;
+  margin-top: -10px;
 }
 
 @media (max-height: 900px) {
