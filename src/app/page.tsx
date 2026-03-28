@@ -202,6 +202,24 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center h-screen overflow-hidden animate-page-in">
+      {/* Logo + name top left */}
+      <div className="w-full px-6 pt-3 pb-1 shrink-0">
+        <div className="flex items-center gap-2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[var(--theme-accent)]">
+            <rect x="2" y="6" width="20" height="14" rx="2" stroke="currentColor" strokeWidth="2"/>
+            <rect x="5" y="9" width="2" height="2" rx="0.5" fill="currentColor"/>
+            <rect x="9" y="9" width="2" height="2" rx="0.5" fill="currentColor"/>
+            <rect x="13" y="9" width="2" height="2" rx="0.5" fill="currentColor"/>
+            <rect x="17" y="9" width="2" height="2" rx="0.5" fill="currentColor"/>
+            <rect x="7" y="13" width="2" height="2" rx="0.5" fill="currentColor"/>
+            <rect x="11" y="13" width="2" height="2" rx="0.5" fill="currentColor"/>
+            <rect x="15" y="13" width="2" height="2" rx="0.5" fill="currentColor"/>
+            <rect x="8" y="17" width="8" height="1.5" rx="0.75" fill="currentColor"/>
+          </svg>
+          <span className="text-sm font-semibold tracking-tight text-zinc-800 dark:text-zinc-200">KeyTest</span>
+        </div>
+      </div>
+
       {/* Main content — flex-1 to fill remaining space */}
       <div className="flex-1 flex flex-col items-center justify-center w-full max-w-5xl mx-auto px-8 min-h-0">
         {/* Mode selector — compact, Monkeytype style */}
