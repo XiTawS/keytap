@@ -26,101 +26,84 @@ export function ModeSelector({
   onLanguageChange,
 }: ModeSelectorProps) {
   return (
-    <div className="flex items-center gap-0.5 rounded-xl bg-zinc-100/60 dark:bg-zinc-900/60 px-2 py-1.5 text-xs font-medium backdrop-blur-sm transition-colors duration-200">
-      {/* Mode toggles */}
-      <PillButton
-        active={mode === "time"}
-        onClick={() => onModeChange("time")}
-      >
-        time
-      </PillButton>
-      <PillButton
-        active={mode === "infinite"}
-        onClick={() => onModeChange("infinite")}
-      >
-        infinite
-      </PillButton>
+    <div className="flex items-center justify-center gap-0">
+      {/* Solo options: mode, time, language */}
+      <div className="flex items-center text-xs font-medium">
+        {/* Mode toggles */}
+        <Option active={mode === "time"} onClick={() => onModeChange("time")}>
+          time
+        </Option>
+        <Option
+          active={mode === "infinite"}
+          onClick={() => onModeChange("infinite")}
+        >
+          infinite
+        </Option>
 
-      {/* Divider */}
-      {mode === "time" && <Divider />}
-
-      {/* Time options (only in time mode) */}
-      {mode === "time" &&
-        TIME_OPTIONS.map((t) => (
-          <PillButton
-            key={t}
-            active={timeLimit === t}
-            onClick={() => onTimeLimitChange(t)}
-          >
-            {t}
-          </PillButton>
-        ))}
-
-      {/* Divider */}
-      <Divider />
-
-      {/* Language toggle */}
-      <PillButton
-        active={false}
-        onClick={() => onLanguageChange(language === "en" ? "fr" : "en")}
-        className="uppercase font-semibold"
-      >
-        {language}
-      </PillButton>
-
-      {/* Spacer to push duel to far right */}
-      <div className="flex-1" />
-
-      {/* Duel divider — taller, more prominent */}
-      <div className="mx-2 h-5 w-px bg-zinc-300 dark:bg-zinc-700" />
-
-      {/* Duel mode link — accent outline style */}
-      <Link
-        href="/duel"
-        className={cn(
-          "rounded-lg px-3 py-1 transition-all duration-150 flex items-center gap-1.5",
-          "border border-[var(--theme-accent)]/40 text-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/10 font-semibold"
+        {/* Divider + Time options (only in time mode) */}
+        {mode === "time" && (
+          <>
+            <Divider />
+            {TIME_OPTIONS.map((t) => (
+              <Option
+                key={t}
+                active={timeLimit === t}
+                onClick={() => onTimeLimitChange(t)}
+              >
+                {t}
+              </Option>
+            ))}
+          </>
         )}
-      >
-        <Swords size={13} />
-        duel
-      </Link>
 
-      {/* Battle Royale link */}
-      <Link
-        href="/battle"
-        className={cn(
-          "rounded-lg px-3 py-1 transition-all duration-150 flex items-center gap-1.5",
-          "border border-[var(--theme-accent)]/40 text-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/10 font-semibold"
-        )}
-      >
-        <Crown size={13} />
-        battle
-      </Link>
+        {/* Divider + Language */}
+        <Divider />
+        <Option
+          active={false}
+          onClick={() => onLanguageChange(language === "en" ? "fr" : "en")}
+        >
+          <span className="uppercase font-semibold">{language}</span>
+        </Option>
+      </div>
+
+      {/* Multiplayer icons — subtle, far right */}
+      <div className="flex items-center gap-1 ml-4">
+        <Link
+          href="/duel"
+          title="1v1 Duel"
+          className="text-zinc-400 dark:text-zinc-500 hover:text-[var(--theme-accent)] transition-colors duration-150 p-1"
+        >
+          <Swords size={15} />
+        </Link>
+        <Link
+          href="/battle"
+          title="Battle Royale"
+          className="text-zinc-400 dark:text-zinc-500 hover:text-[var(--theme-accent)] transition-colors duration-150 p-1"
+        >
+          <Crown size={15} />
+        </Link>
+      </div>
     </div>
   );
 }
 
-function PillButton({
+function Option({
   active,
   onClick,
   children,
-  className,
 }: {
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
-  className?: string;
 }) {
   return (
     <button
       onClick={onClick}
       className={cn(
-        "rounded-lg px-3 py-1 tabular-nums transition-all duration-150",
+        "px-2.5 py-1 tabular-nums transition-colors duration-150",
         active
           ? "text-[var(--theme-accent)]"
-          : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300",
-        className
+          : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
       )}
     >
       {children}
@@ -129,5 +112,7 @@ function PillButton({
 }
 
 function Divider() {
-  return <div className="mx-1 h-3.5 w-px bg-zinc-300/50 dark:bg-zinc-700/50" />;
+  return (
+    <div className="mx-1.5 h-3 w-px bg-zinc-300/40 dark:bg-zinc-700/40" />
+  );
 }
