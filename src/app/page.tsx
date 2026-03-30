@@ -187,14 +187,14 @@ export default function Home() {
           <Monitor size={64} className="text-zinc-400 dark:text-zinc-500" />
         </div>
         <h1 className="text-2xl font-semibold tracking-tight mb-3 text-zinc-900 dark:text-zinc-100">
-          KeyTest is desktop only
+          KeyTap is desktop only
         </h1>
         <p className="text-zinc-500 text-sm max-w-xs leading-relaxed">
           This typing test requires a physical keyboard. Please visit on a desktop computer.
         </p>
         <div className="mt-8 h-px w-16 bg-zinc-200 dark:bg-zinc-800" />
         <p className="mt-4 text-xs text-zinc-400 dark:text-zinc-600 font-mono">
-          keytest.dev
+          keytap.dev
         </p>
       </div>
     );
@@ -216,7 +216,7 @@ export default function Home() {
             <rect x="15" y="13" width="2" height="2" rx="0.5" fill="currentColor"/>
             <rect x="8" y="17" width="8" height="1.5" rx="0.75" fill="currentColor"/>
           </svg>
-          <span className="text-lg font-bold tracking-tight text-zinc-800 dark:text-zinc-200">KeyTest</span>
+          <span className="text-lg font-bold tracking-tight text-zinc-800 dark:text-zinc-200">KeyTap</span>
         </div>
       </div>
 

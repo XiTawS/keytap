@@ -12,7 +12,7 @@ export interface Settings {
   haptics: boolean;
 }
 
-const STORAGE_KEY = "keytest-settings";
+const STORAGE_KEY = "keytap-settings";
 
 const DEFAULT_SETTINGS: Settings = {
   theme: "classic",

@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "KeyTest — Typing Speed Test",
+  title: "KeyTap — Typing Speed Test",
   description:
     "Test your typing speed with a beautiful mechanical keyboard visualization",
   icons: {

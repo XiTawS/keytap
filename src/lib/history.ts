@@ -18,7 +18,7 @@ export interface TestResult {
   totalWords: number;
 }
 
-const STORAGE_KEY = "keytest-history";
+const STORAGE_KEY = "keytap-history";
 
 export function getHistory(): TestResult[] {
   try {

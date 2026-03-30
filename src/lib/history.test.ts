@@ -50,7 +50,7 @@ describe("history", () => {
   });
 
   it("handles corrupted localStorage gracefully", () => {
-    localStorage.setItem("keytest-history", "not-json");
+    localStorage.setItem("keytap-history", "not-json");
     expect(getHistory()).toEqual([]);
   });
 });
