@@ -139,6 +139,12 @@
   }
 }
 
+/* Dynamic viewport height for Chrome/Safari browser chrome */
+html, body {
+  height: 100dvh;
+  height: -webkit-fill-available;
+}
+
 /* Smooth blinking cursor */
 @keyframes cursor-blink {
   0%, 100% { opacity: 1; }

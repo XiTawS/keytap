@@ -201,9 +201,9 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col items-center h-screen overflow-hidden animate-page-in">
+    <div className="flex flex-col items-center h-dvh overflow-hidden animate-page-in">
       {/* Logo + name top left */}
-      <div className="w-full px-6 pt-4 pb-0 shrink-0">
+      <div className="w-full px-6 pt-2 pb-0 shrink-0">
         <div className="flex items-center gap-2.5">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[var(--theme-accent)]">
             <rect x="2" y="6" width="20" height="14" rx="2" stroke="currentColor" strokeWidth="2"/>
@@ -273,7 +273,7 @@ export default function Home() {
       </div>
 
       {/* Keyboard — centered at bottom, pointer-events-none to never steal focus */}
-      <div className="pb-6 pt-7 pointer-events-none shrink-0 keyboard-wrapper">
+      <div className="pb-2 pt-3 pointer-events-none shrink-0 keyboard-wrapper">
         <Keyboard
           theme={settings.theme}
           enableSound={settings.soundEnabled}
