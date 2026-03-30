@@ -134,7 +134,7 @@ function WpmChart({ history }: { history: WpmSnapshot[] }) {
     );
   }
 
-  return <canvas ref={canvasRef} className="results-chart w-full h-40" />;
+  return <canvas ref={canvasRef} className="results-chart w-full h-[120px]" />;
 }
 
 export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenProps) {
@@ -164,27 +164,27 @@ export function ResultsScreen({ results, onRestart, onNextTest }: ResultsScreenP
   return (
     <div className="w-full max-w-5xl mx-auto animate-results-in">
       {/* Big WPM — accent colored */}
-      <div className="text-center mb-4">
+      <div className="text-center mb-2">
         <div
-          className="results-wpm text-6xl font-bold font-mono tracking-tight"
+          className="results-wpm text-5xl font-bold font-mono tracking-tight"
           style={{ color: "var(--theme-accent)" }}
         >
           {results.wpm}
         </div>
-        <div className="text-zinc-400 dark:text-zinc-600 text-xs mt-1 font-mono tracking-widest uppercase">
+        <div className="results-wpm-label text-zinc-400 dark:text-zinc-600 text-xs mt-0.5 font-mono tracking-widest uppercase">
           words per minute
         </div>
       </div>
 
       {/* Chart + Stats side by side */}
-      <div className="flex gap-4 mb-4">
+      <div className="flex gap-3 mb-3">
         {/* WPM Chart */}
-        <div className="flex-1 bg-zinc-100/40 dark:bg-zinc-900/40 rounded-xl p-3 border border-zinc-200/50 dark:border-zinc-800/50 transition-colors duration-200">
+        <div className="flex-1 bg-zinc-100/40 dark:bg-zinc-900/40 rounded-xl p-2 border border-zinc-200/50 dark:border-zinc-800/50 transition-colors duration-200">
           <WpmChart history={results.wpmHistory} />
         </div>
 
         {/* Stats grid */}
-        <div className="results-stats-grid grid grid-cols-2 gap-2 w-72 shrink-0">
+        <div className="results-stats-grid grid grid-cols-2 gap-1.5 w-64 shrink-0">
           <StatCard
             label="raw"
             value={String(results.rawWpm)}
@@ -258,11 +258,11 @@ function StatCard({
   wide?: boolean;
 }) {
   return (
-    <div className={`bg-zinc-100/40 dark:bg-zinc-900/40 rounded-xl p-3 border border-zinc-200/50 dark:border-zinc-800/50 transition-colors duration-200 ${wide ? "col-span-2" : ""}`}>
-      <div className="text-zinc-400 dark:text-zinc-600 text-[10px] mb-1 font-mono tracking-wider uppercase">
+    <div className={`results-stat-card bg-zinc-100/40 dark:bg-zinc-900/40 rounded-lg p-2 border border-zinc-200/50 dark:border-zinc-800/50 transition-colors duration-200 ${wide ? "col-span-2" : ""}`}>
+      <div className="text-zinc-400 dark:text-zinc-600 text-[10px] mb-0.5 font-mono tracking-wider uppercase">
         {label}
       </div>
-      <div className={`text-lg font-bold font-mono ${color ?? ""}`}>{value}</div>
+      <div className={`text-base font-bold font-mono ${color ?? ""}`}>{value}</div>
       {sublabel && (
         <div className="text-zinc-400 dark:text-zinc-700 text-[9px] mt-1 font-mono">{sublabel}</div>
       )}
