@@ -10,7 +10,8 @@ import { useTypingTest } from "@/hooks/use-typing-test";
 import { generateSeededWords } from "@/lib/words";
 import {
   updateProgress,
-  subscribeToProgress,
+  broadcastProgress,
+  subscribeToBroadcast,
   subscribeToDuel,
   updateDuelStatus,
   type Duel,
@@ -49,7 +50,7 @@ export function DuelGame({
   const timeLimit = (duel.time_limit || 30) as TimeLimit;
 
   // Generate same words for both players
-  const wordCount = Math.max(Math.ceil((80 * timeLimit) / 60), 50);
+  const wordCount = Math.max(Math.ceil((200 * timeLimit) / 60), 300);
   const [words] = useState(() =>
     generateSeededWords(duel.word_seed, language, wordCount)
   );
@@ -61,12 +62,10 @@ export function DuelGame({
     initialWords: words,
   });
 
-  // Subscribe to opponent progress
+  // Subscribe to opponent progress via broadcast
   useEffect(() => {
-    const channel = subscribeToProgress(duel.id, (progress) => {
-      if (progress.player_id !== playerId) {
-        setOpponentProgress(progress);
-      }
+    const channel = subscribeToBroadcast(duel.id, playerId, (progress) => {
+      setOpponentProgress(progress as unknown as DuelProgress);
     });
 
     return () => {
@@ -87,12 +86,12 @@ export function DuelGame({
     };
   }, [duel.id]);
 
-  // Send progress updates every 200ms
+  // Broadcast progress every 100ms (lightweight, no DB writes)
   useEffect(() => {
     if (!gameStarted || duelFinished) return;
 
     progressIntervalRef.current = setInterval(() => {
-      updateProgress(duel.id, playerId, {
+      broadcastProgress(duel.id, playerId, {
         word_index: typing.currentWordIndex,
         char_index: typing.currentCharIndex,
         correct_chars: typing.stats.correctChars,
@@ -100,7 +99,7 @@ export function DuelGame({
         wpm: typing.stats.wpm,
         finished: typing.isFinished,
       });
-    }, 200);
+    }, 100);
 
     return () => {
       if (progressIntervalRef.current)
@@ -119,17 +118,22 @@ export function DuelGame({
     typing.isFinished,
   ]);
 
-  // When player finishes, send final progress and check if duel is done
+  // When player finishes, write final results to DB and broadcast
   useEffect(() => {
     if (typing.isFinished && gameStarted) {
-      updateProgress(duel.id, playerId, {
+      const finalProgress = {
         word_index: typing.currentWordIndex,
         char_index: typing.currentCharIndex,
         correct_chars: typing.stats.correctChars,
         incorrect_chars: typing.stats.incorrectChars,
         wpm: typing.stats.wpm,
         finished: true,
-      });
+      };
+
+      // Broadcast so opponent sees it immediately
+      broadcastProgress(duel.id, playerId, finalProgress);
+      // Write to DB for persistence
+      updateProgress(duel.id, playerId, finalProgress);
 
       // If both finished, mark duel as finished
       if (opponentProgress?.finished) {

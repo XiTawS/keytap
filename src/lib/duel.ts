@@ -176,3 +176,46 @@ export function subscribeToProgress(
     )
     .subscribe();
 }
+
+export function broadcastProgress(
+  duelId: string,
+  playerId: string,
+  progress: {
+    word_index: number;
+    char_index: number;
+    correct_chars: number;
+    incorrect_chars: number;
+    wpm: number;
+    finished: boolean;
+  }
+): void {
+  supabase.channel(`duel-live-${duelId}`).send({
+    type: "broadcast",
+    event: "progress",
+    payload: { player_id: playerId, ...progress },
+  });
+}
+
+export function subscribeToBroadcast(
+  duelId: string,
+  playerId: string,
+  callback: (progress: {
+    player_id: string;
+    word_index: number;
+    char_index: number;
+    correct_chars: number;
+    incorrect_chars: number;
+    wpm: number;
+    finished: boolean;
+  }) => void
+): RealtimeChannel {
+  return supabase
+    .channel(`duel-live-${duelId}`)
+    .on("broadcast", { event: "progress" }, (payload) => {
+      const data = payload.payload;
+      if (data.player_id !== playerId) {
+        callback(data);
+      }
+    })
+    .subscribe();
+}
