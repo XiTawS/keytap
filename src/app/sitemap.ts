@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://keytap.vercel.app";
+  const baseUrl = "https://keytap.app";
   return [
     {
       url: baseUrl,

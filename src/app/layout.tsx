@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://keytap.vercel.app"),
+  metadataBase: new URL("https://keytap.app"),
   title: {
     default: "KeyTap — Free Online Typing Speed Test",
     template: "%s | KeyTap",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://keytap.vercel.app",
+    url: "https://keytap.app",
     siteName: "KeyTap",
     title: "KeyTap — Free Online Typing Speed Test",
     description:
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://keytap.vercel.app",
+    canonical: "https://keytap.app",
   },
 };
 
@@ -101,7 +101,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebApplication",
               name: "KeyTap",
-              url: "https://keytap.vercel.app",
+              url: "https://keytap.app",
               description:
                 "Free online typing speed test with mechanical keyboard visualization, real-time WPM tracking, and multiplayer modes.",
               applicationCategory: "UtilityApplication",
