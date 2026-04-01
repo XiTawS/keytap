@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://keytap.app"),
   title: {
-    default: "KeyTap — Free Online Typing Speed Test | Test Your WPM",
+    default: "KeyTap — Test Your Typing Speed | Free WPM Test Online",
     template: "%s | KeyTap",
   },
   description:
-    "Test and improve your typing speed with KeyTap. Real-time WPM tracking, mechanical keyboard visualization, multiplayer duels, and multi-language support. 100% free.",
+    "How fast can you type? KeyTap measures your WPM with a realistic keyboard, live stats, multiplayer duels, and custom themes. No signup, 100% free.",
   keywords: [
     "typing test",
     "typing speed test",
@@ -46,9 +46,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://keytap.app",
     siteName: "KeyTap",
-    title: "KeyTap — Free Online Typing Speed Test | Test Your WPM",
+    title: "KeyTap — Test Your Typing Speed | Free WPM Test Online",
     description:
-      "Test your typing speed with a beautiful mechanical keyboard. Track WPM, accuracy, and compete in multiplayer duels.",
+      "How fast can you type? Realistic keyboard, live WPM tracking, multiplayer duels, and custom themes. No signup needed.",
     images: [
       {
         url: "/og-image.png",
@@ -60,9 +60,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "KeyTap — Free Online Typing Speed Test | Test Your WPM",
+    title: "KeyTap — Test Your Typing Speed | Free WPM Test Online",
     description:
-      "Test your typing speed with a beautiful mechanical keyboard. Track WPM, accuracy, and compete in multiplayer duels.",
+      "How fast can you type? Realistic keyboard, live WPM tracking, multiplayer duels, and custom themes. No signup needed.",
     images: ["/og-image.png"],
     creator: "@_XiTawS",
   },
@@ -103,7 +103,7 @@ export default function RootLayout({
               name: "KeyTap",
               url: "https://keytap.app",
               description:
-                "Free online typing speed test with mechanical keyboard visualization, real-time WPM tracking, and multiplayer modes.",
+                "How fast can you type? Free typing speed test with a realistic keyboard, live WPM tracking, multiplayer duels, and custom themes.",
               applicationCategory: "UtilityApplication",
               operatingSystem: "Web",
               offers: {
