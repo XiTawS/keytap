@@ -65,6 +65,7 @@ export interface UseTypingTestReturn {
   wpmHistory: WpmSnapshot[];
   getResults: () => TestResults;
   handleKeyDown: (key: string) => "correct" | "incorrect" | "control";
+  forceStart: (timestamp: number) => void;
   reset: () => void;
   retry: () => void;
   stopTest: () => void;
@@ -398,13 +399,20 @@ export function useTypingTest({
     if (wpmSnapshotRef.current) clearInterval(wpmSnapshotRef.current);
   }, [mode, timeLimit]);
 
+  const forceStart = useCallback((timestamp: number) => {
+    startTimeRef.current = timestamp;
+    dispatch({ type: "START" });
+  }, []);
+
   const handleKeyDown = useCallback(
     (key: string): "correct" | "incorrect" | "control" => {
       if (state.isFinished) return "control";
 
-      // Start timer on first keystroke
-      if (startTimeRef.current === null) {
-        startTimeRef.current = Date.now();
+      // Start timer on first keystroke (unless forceStart already set it)
+      if (!state.isActive) {
+        if (startTimeRef.current === null) {
+          startTimeRef.current = Date.now();
+        }
         dispatch({ type: "START" });
       }
 
@@ -552,6 +560,7 @@ export function useTypingTest({
     wpmHistory,
     getResults,
     handleKeyDown,
+    forceStart,
     reset,
     retry,
     stopTest,

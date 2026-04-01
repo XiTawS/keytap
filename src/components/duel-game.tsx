@@ -154,7 +154,8 @@ export function DuelGame({
   const handleCountdownComplete = useCallback(() => {
     setShowCountdown(false);
     setGameStarted(true);
-  }, []);
+    typing.forceStart(Date.now());
+  }, [typing.forceStart]);
 
   const handleKeyDown = useCallback(
     (key: string): "correct" | "incorrect" | "control" => {
