@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://keytap.app"),
   title: {
-    default: "KeyTap — Free Online Typing Speed Test",
+    default: "KeyTap — Free Online Typing Speed Test | Test Your WPM",
     template: "%s | KeyTap",
   },
   description:
-    "Test and improve your typing speed with KeyTap. Beautiful mechanical keyboard visualization, real-time WPM tracking, multiple languages, dark mode, and multiplayer duel mode. Free, no account required.",
+    "Test and improve your typing speed with KeyTap. Real-time WPM tracking, mechanical keyboard visualization, multiplayer duels, and multi-language support. 100% free.",
   keywords: [
     "typing test",
     "typing speed test",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://keytap.app",
     siteName: "KeyTap",
-    title: "KeyTap — Free Online Typing Speed Test",
+    title: "KeyTap — Free Online Typing Speed Test | Test Your WPM",
     description:
       "Test your typing speed with a beautiful mechanical keyboard. Track WPM, accuracy, and compete in multiplayer duels.",
     images: [
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "KeyTap — Free Online Typing Speed Test",
+    title: "KeyTap — Free Online Typing Speed Test | Test Your WPM",
     description:
       "Test your typing speed with a beautiful mechanical keyboard. Track WPM, accuracy, and compete in multiplayer duels.",
     images: ["/og-image.png"],

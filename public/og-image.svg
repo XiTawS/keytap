@@ -1,7 +1,7 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <radialGradient id="glow" cx="50%" cy="40%" r="50%" fx="50%" fy="40%">
-      <stop offset="0%" stop-color="#F57644" stop-opacity="0.10"/>
+    <radialGradient id="glow" cx="50%" cy="30%" r="40%" fx="50%" fy="30%">
+      <stop offset="0%" stop-color="#F57644" stop-opacity="0.12"/>
       <stop offset="100%" stop-color="#F57644" stop-opacity="0"/>
     </radialGradient>
   </defs>
@@ -10,52 +10,213 @@
   <rect width="1200" height="630" fill="#09090b"/>
 
   <!-- Subtle glow behind title -->
-  <ellipse cx="600" cy="240" rx="400" ry="200" fill="url(#glow)"/>
+  <ellipse cx="600" cy="140" rx="350" ry="160" fill="url(#glow)"/>
 
   <!-- Title -->
-  <text x="600" y="220" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="80" font-weight="700" fill="#ffffff">KeyTap</text>
+  <text x="600" y="130" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="60" font-weight="700" fill="#ffffff">KeyTap</text>
 
-  <!-- Subtitle -->
-  <text x="600" y="270" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="400" fill="#a1a1aa">Free Online Typing Speed Test</text>
+  <!-- Tagline -->
+  <text x="600" y="165" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="400" fill="#a1a1aa">Free Online Typing Speed Test</text>
 
-  <!-- Keyboard -->
-  <!-- Top row: 10 keys -->
-  <g>
-    <rect x="270" y="340" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="336" y="340" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="402" y="340" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="468" y="340" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="534" y="340" width="56" height="50" rx="8" fill="#F57644" stroke="#F57644" stroke-width="2"/>
-    <rect x="600" y="340" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="666" y="340" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="732" y="340" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="798" y="340" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="864" y="340" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-  </g>
+  <!-- Keyboard outer shell -->
+  <rect x="125" y="210" width="950" height="390" rx="12" fill="#27272a" stroke="#3f3f46" stroke-width="2"/>
 
-  <!-- Middle row: 9 keys (offset right by 33px) -->
-  <g>
-    <rect x="303" y="400" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="369" y="400" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="435" y="400" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="501" y="400" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="567" y="400" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="633" y="400" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="699" y="400" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="765" y="400" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="831" y="400" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-  </g>
+  <!-- Keyboard inner area -->
+  <rect x="133" y="218" width="934" height="374" rx="6" fill="#18181b"/>
 
-  <!-- Bottom row: 7 keys + 1 wide spacebar (offset right by 66px) -->
-  <g>
-    <rect x="336" y="460" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="402" y="460" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="468" y="460" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="534" y="460" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="600" y="460" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="666" y="460" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <rect x="732" y="460" width="56" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-    <!-- Spacebar -->
-    <rect x="798" y="460" width="122" height="50" rx="8" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-  </g>
+  <!-- Row 1: Function row - y=226, h=32 -->
+  <!-- Keys: esc(accent) F1 F2 F3 F4 | gap | F5(dk) F6(dk) F7(dk) F8(dk) F9(dk) | gap | F10 F11 F12 F13(dk) del(dk) bulb(dk) -->
+  <!-- 16 keys + 2 gaps. Standard key=50, gap=12. Total usable width ~918. Let's use key=49, gap=2, section gaps=10 -->
+  <!-- Section 1: esc,F1-F4 = 5 keys. Section 2: F5-F9 = 5 keys. Section 3: F10-F12,F13,del,bulb = 6 keys -->
+  <!-- x starts at 141 -->
+  <rect x="141" y="226" width="49" height="32" rx="4" fill="#F57644"/>
+  <rect x="192" y="226" width="49" height="32" rx="4" fill="#F5F5F5"/>
+  <rect x="243" y="226" width="49" height="32" rx="4" fill="#F5F5F5"/>
+  <rect x="294" y="226" width="49" height="32" rx="4" fill="#F5F5F5"/>
+  <rect x="345" y="226" width="49" height="32" rx="4" fill="#F5F5F5"/>
+  <!-- gap -->
+  <rect x="406" y="226" width="49" height="32" rx="4" fill="#737373"/>
+  <rect x="457" y="226" width="49" height="32" rx="4" fill="#737373"/>
+  <rect x="508" y="226" width="49" height="32" rx="4" fill="#737373"/>
+  <rect x="559" y="226" width="49" height="32" rx="4" fill="#737373"/>
+  <rect x="610" y="226" width="49" height="32" rx="4" fill="#737373"/>
+  <!-- gap -->
+  <rect x="671" y="226" width="49" height="32" rx="4" fill="#F5F5F5"/>
+  <rect x="722" y="226" width="49" height="32" rx="4" fill="#F5F5F5"/>
+  <rect x="773" y="226" width="49" height="32" rx="4" fill="#F5F5F5"/>
+  <rect x="824" y="226" width="49" height="32" rx="4" fill="#737373"/>
+  <rect x="875" y="226" width="49" height="32" rx="4" fill="#737373"/>
+  <rect x="926" y="226" width="49" height="32" rx="4" fill="#737373"/>
+  <!-- Fn row dots -->
+  <circle cx="165" cy="242" r="2" fill="rgba(0,0,0,0.5)"/>
+  <circle cx="216" cy="242" r="2" fill="rgba(0,0,0,0.7)"/>
+  <circle cx="267" cy="242" r="2" fill="rgba(0,0,0,0.7)"/>
+  <circle cx="318" cy="242" r="2" fill="rgba(0,0,0,0.7)"/>
+  <circle cx="369" cy="242" r="2" fill="rgba(0,0,0,0.7)"/>
+  <circle cx="430" cy="242" r="2" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="481" cy="242" r="2" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="532" cy="242" r="2" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="583" cy="242" r="2" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="634" cy="242" r="2" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="695" cy="242" r="2" fill="rgba(0,0,0,0.7)"/>
+  <circle cx="746" cy="242" r="2" fill="rgba(0,0,0,0.7)"/>
+  <circle cx="797" cy="242" r="2" fill="rgba(0,0,0,0.7)"/>
+  <circle cx="848" cy="242" r="2" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="899" cy="242" r="2" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="950" cy="242" r="2" fill="rgba(255,255,255,0.5)"/>
+
+  <!-- Row 2: Numbers - y=262, h=32 -->
+  <!-- ~, 1-9, 0, -, =, backspace(dark,wide), pgup(dark) -->
+  <!-- 13 standard + 1 wide(backspace ~75) + 1 pgup(49). Total = 13*51 + 75 + 49 + gaps ~ 918 -->
+  <!-- Using key=53 for standard, backspace=80, pgup=49, gap=2 -->
+  <!-- Actually let's compute: 918 total width. 15 keys. backspace=1.5x, pgup=1x. So 13 + 1.5 + 1 = 15.5 units. 918/15.5 ~= 59... too wide -->
+  <!-- Let me use: standard=55, gap=2, backspace=82, pgup=49 -->
+  <!-- 13*57 + 84 + 51 = 741 + 84 + 51 = 876. Remaining = 918-876 = 42. Hmm, let me just lay them out -->
+  <!-- 15 keys total. Let standard=53, wide=80, all gap=2. 13*55 + 82 + 51 = 715+82+51 = 848. Pad from 141, end at 141+848=989. Need to reach ~1059. -->
+  <!-- Let me recalculate: inner area is 133 to 1067, width=934, padding 8px each side => keys from 141 to 1059, width=918 -->
+  <!-- 13 standard keys @ 55px + 2px gap = 57 each = 741. backspace @ 83px + 2 = 85. pgup @ 55 + 0 = 55. Total = 741+85+55 = 881. Short by 37. -->
+  <!-- Let me use 57px standard keys: 13*59=767, backspace=87+2=89, pgup=57. 767+89+57=913. Close enough (918). -->
+  <!-- Actually simpler: let me just space them evenly -->
+  <rect x="141" y="262" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="168" y="283" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">~</text>
+  <rect x="198" y="262" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="225" y="283" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">1</text>
+  <rect x="255" y="262" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="282" y="283" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">2</text>
+  <rect x="312" y="262" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="339" y="283" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">3</text>
+  <rect x="369" y="262" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="396" y="283" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">4</text>
+  <rect x="426" y="262" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="453" y="283" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">5</text>
+  <rect x="483" y="262" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="510" y="283" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">6</text>
+  <rect x="540" y="262" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="567" y="283" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">7</text>
+  <rect x="597" y="262" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="624" y="283" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">8</text>
+  <rect x="654" y="262" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="681" y="283" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">9</text>
+  <rect x="711" y="262" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="738" y="283" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">0</text>
+  <rect x="768" y="262" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="795" y="283" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">-</text>
+  <rect x="825" y="262" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="852" y="283" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">=</text>
+  <!-- backspace (dark, wide) -->
+  <rect x="882" y="262" width="82" height="32" rx="4" fill="#737373"/>
+  <!-- pgup (dark) -->
+  <rect x="966" y="262" width="55" height="32" rx="4" fill="#737373"/>
+
+  <!-- Row 3: QWERTY - y=298, h=32 -->
+  <!-- tab(dark,wide), Q W E R T Y U I O P [ ] \(dark,wide), pgdn(dark) -->
+  <rect x="141" y="298" width="72" height="32" rx="4" fill="#737373"/>
+  <rect x="215" y="298" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="242" y="319" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">Q</text>
+  <rect x="272" y="298" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="299" y="319" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">W</text>
+  <rect x="329" y="298" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="356" y="319" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">E</text>
+  <rect x="386" y="298" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="413" y="319" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">R</text>
+  <rect x="443" y="298" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="470" y="319" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">T</text>
+  <rect x="500" y="298" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="527" y="319" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">Y</text>
+  <rect x="557" y="298" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="584" y="319" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">U</text>
+  <rect x="614" y="298" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="641" y="319" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">I</text>
+  <rect x="671" y="298" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="698" y="319" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">O</text>
+  <rect x="728" y="298" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="755" y="319" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">P</text>
+  <rect x="785" y="298" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="812" y="319" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">[</text>
+  <rect x="842" y="298" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="869" y="319" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">]</text>
+  <!-- backslash (dark, wide) -->
+  <rect x="899" y="298" width="65" height="32" rx="4" fill="#737373"/>
+  <!-- pgdn (dark) -->
+  <rect x="966" y="298" width="55" height="32" rx="4" fill="#737373"/>
+
+  <!-- Row 4: Home row - y=334, h=32 -->
+  <!-- caps(dark,wide), A S D F G H J K L ; ' return(dark,wide), home(dark) -->
+  <rect x="141" y="334" width="82" height="32" rx="4" fill="#737373"/>
+  <rect x="225" y="334" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="252" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">A</text>
+  <rect x="282" y="334" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="309" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">S</text>
+  <rect x="339" y="334" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="366" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">D</text>
+  <rect x="396" y="334" width="55" height="32" rx="4" fill="#F57644"/>
+  <text x="423" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.9)">F</text>
+  <rect x="453" y="334" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="480" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">G</text>
+  <rect x="510" y="334" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="537" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">H</text>
+  <rect x="567" y="334" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="594" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">J</text>
+  <rect x="624" y="334" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="651" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">K</text>
+  <rect x="681" y="334" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="708" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">L</text>
+  <rect x="738" y="334" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="765" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">;</text>
+  <rect x="795" y="334" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="822" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">'</text>
+  <!-- return (dark, wide) -->
+  <rect x="852" y="334" width="112" height="32" rx="4" fill="#737373"/>
+  <!-- No home key - fits better without extending past board -->
+
+  <!-- Row 5: Shift row - y=370, h=32 -->
+  <!-- shift(dark,wider), Z X C V B N M , . / shift(dark), up(dark), end(dark) -->
+  <rect x="141" y="370" width="98" height="32" rx="4" fill="#737373"/>
+  <rect x="241" y="370" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="268" y="391" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">Z</text>
+  <rect x="298" y="370" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="325" y="391" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">X</text>
+  <rect x="355" y="370" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="382" y="391" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">C</text>
+  <rect x="412" y="370" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="439" y="391" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">V</text>
+  <rect x="469" y="370" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="496" y="391" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">B</text>
+  <rect x="526" y="370" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="553" y="391" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">N</text>
+  <rect x="583" y="370" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="610" y="391" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">M</text>
+  <rect x="640" y="370" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="667" y="391" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">,</text>
+  <rect x="697" y="370" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="724" y="391" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">.</text>
+  <rect x="754" y="370" width="55" height="32" rx="4" fill="#F5F5F5"/>
+  <text x="781" y="391" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(0,0,0,0.7)">/</text>
+  <!-- right shift (dark) -->
+  <rect x="811" y="370" width="55" height="32" rx="4" fill="#737373"/>
+  <!-- up arrow (dark) -->
+  <rect x="868" y="370" width="49" height="32" rx="4" fill="#737373"/>
+  <!-- end (dark) -->
+  <rect x="919" y="370" width="49" height="32" rx="4" fill="#737373"/>
+
+  <!-- Row 6: Bottom row - y=406, h=32 -->
+  <!-- ctrl(dk), option(dk), cmd(dk), space(wide), cmd(dk), fn(dk), ctrl(dk), left(dk), down(dk), right(dk) -->
+  <rect x="141" y="406" width="55" height="32" rx="4" fill="#737373"/>
+  <rect x="198" y="406" width="55" height="32" rx="4" fill="#737373"/>
+  <rect x="255" y="406" width="55" height="32" rx="4" fill="#737373"/>
+  <!-- spacebar (wide) -->
+  <rect x="312" y="406" width="340" height="32" rx="4" fill="#F5F5F5"/>
+  <rect x="654" y="406" width="55" height="32" rx="4" fill="#737373"/>
+  <rect x="711" y="406" width="55" height="32" rx="4" fill="#737373"/>
+  <rect x="768" y="406" width="55" height="32" rx="4" fill="#737373"/>
+  <!-- arrow keys -->
+  <rect x="825" y="406" width="49" height="32" rx="4" fill="#737373"/>
+  <rect x="876" y="406" width="49" height="32" rx="4" fill="#737373"/>
+  <rect x="927" y="406" width="49" height="32" rx="4" fill="#737373"/>
+
+  <!-- Accent key indicator on ESC -->
+  <text x="165" y="245" text-anchor="middle" font-family="system-ui, sans-serif" font-size="8" font-weight="600" fill="rgba(255,255,255,0.9)">esc</text>
+
+  <!-- Bottom domain text -->
+  <text x="600" y="575" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" fill="#52525b">keytap.app</text>
 </svg>
