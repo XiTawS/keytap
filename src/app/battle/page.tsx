@@ -9,6 +9,7 @@ import {
   Loader2,
   Crown,
   Users,
+  Link2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BattleGame } from "@/components/battle-game";
@@ -43,6 +44,7 @@ export default function BattlePage() {
   const [playerName, setPlayerName] = useState("");
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // Battle options
@@ -187,6 +189,14 @@ export default function BattlePage() {
       navigator.clipboard.writeText(battle.code);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    }
+  }, [battle?.code]);
+
+  const handleCopyLink = useCallback(() => {
+    if (battle?.code) {
+      navigator.clipboard.writeText(`${window.location.origin}/battle/${battle.code}`);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
     }
   }, [battle?.code]);
 
@@ -412,6 +422,19 @@ export default function BattlePage() {
                 <span>·</span>
                 <span>{battle.language.toUpperCase()}</span>
               </div>
+              <Button
+                variant="outline"
+                onClick={handleCopyLink}
+                className="mt-3 mx-auto"
+                size="sm"
+              >
+                {linkCopied ? (
+                  <Check size={14} className="mr-1.5 text-green-500" />
+                ) : (
+                  <Link2 size={14} className="mr-1.5" />
+                )}
+                {linkCopied ? "Link copied!" : "Copy invite link"}
+              </Button>
             </div>
 
             {/* Player list */}

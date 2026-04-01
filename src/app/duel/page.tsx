@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Monitor, ArrowLeft, Copy, Check, Loader2 } from "lucide-react";
+import { Monitor, ArrowLeft, Copy, Check, Loader2, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DuelGame } from "@/components/duel-game";
 import { useSettings } from "@/contexts/settings-context";
@@ -31,6 +31,7 @@ export default function DuelPage() {
   const [joinCode, setJoinCode] = useState("");
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [duelTimeLimit, setDuelTimeLimit] = useState<TimeLimit>(30);
   const [duelLanguage, setDuelLanguage] = useState<Language>(settings.language);
@@ -97,6 +98,14 @@ export default function DuelPage() {
       navigator.clipboard.writeText(duel.code);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    }
+  }, [duel?.code]);
+
+  const handleCopyLink = useCallback(() => {
+    if (duel?.code) {
+      navigator.clipboard.writeText(`${window.location.origin}/duel/${duel.code}`);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
     }
   }, [duel?.code]);
 
@@ -285,6 +294,19 @@ export default function DuelPage() {
                 </Button>
               </div>
             </div>
+
+            <Button
+              variant="outline"
+              onClick={handleCopyLink}
+              className="mx-auto"
+            >
+              {linkCopied ? (
+                <Check size={16} className="mr-2 text-green-500" />
+              ) : (
+                <Link2 size={16} className="mr-2" />
+              )}
+              {linkCopied ? "Link copied!" : "Copy invite link"}
+            </Button>
 
             <div className="flex items-center justify-center gap-2 text-zinc-500">
               <Loader2 size={16} className="animate-spin" />
