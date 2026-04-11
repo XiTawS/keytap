@@ -86,7 +86,9 @@ export default function Home() {
           "Anonymous";
         const avatarUrl =
           (user.user_metadata?.avatar_url as string | undefined) ?? null;
-        upsertScore(user.id, displayName, avatarUrl, r.wpm).catch(() => {
+        // time_limit=0 is used as sentinel for infinite mode in the DB
+        const dbTimeLimit = mode === "infinite" ? 0 : timeLimit;
+        upsertScore(user.id, displayName, avatarUrl, r.wpm, mode, dbTimeLimit).catch(() => {
           // Score submission failed silently — does not interrupt the UX
         });
       }

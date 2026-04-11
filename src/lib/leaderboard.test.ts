@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-// We import the functions under test — they don't exist yet, so tests will fail
 import { fetchLeaderboard, upsertScore, type LeaderboardEntry } from "./leaderboard";
 
 function makeEntry(overrides: Partial<LeaderboardEntry> = {}): LeaderboardEntry {
@@ -9,8 +8,10 @@ function makeEntry(overrides: Partial<LeaderboardEntry> = {}): LeaderboardEntry 
     id: "entry-1",
     user_id: "user-1",
     display_name: "Alice",
-    avatar_url: "https://lh3.googleusercontent.com/alice.jpg",
+    avatar_url: null,
     best_wpm: 120,
+    mode: "time",
+    time_limit: 30,
     updated_at: "2026-04-11T00:00:00.000Z",
     ...overrides,
   };
@@ -22,8 +23,8 @@ function makeChain(resolvedValue: unknown) {
   methods.forEach((m) => {
     chain[m] = vi.fn().mockReturnValue(chain);
   });
-  // The terminal call resolves
   chain["limit"] = vi.fn().mockResolvedValue(resolvedValue);
+  chain["maybySingle"] = vi.fn().mockResolvedValue({ data: null, error: null });
   chain["maybeSingle"] = vi.fn().mockResolvedValue({ data: null, error: null });
   chain["upsert"] = vi.fn().mockResolvedValue({ error: null });
   chain["select"] = vi.fn().mockReturnValue(chain);
@@ -33,25 +34,36 @@ function makeChain(resolvedValue: unknown) {
 }
 
 describe("fetchLeaderboard", () => {
-  it("queries leaderboard ordered by best_wpm desc, limit 50", async () => {
+  it("queries leaderboard filtered by mode and time_limit, ordered by best_wpm desc", async () => {
     const entries = [makeEntry(), makeEntry({ user_id: "user-2", best_wpm: 90 })];
     const chain = makeChain({ data: entries, error: null });
     const client = { from: vi.fn().mockReturnValue(chain) } as unknown as SupabaseClient;
 
-    const result = await fetchLeaderboard(client);
+    const result = await fetchLeaderboard("time", 30, client);
 
     expect(client.from).toHaveBeenCalledWith("leaderboard");
-    expect(chain.select).toHaveBeenCalledWith("*");
+    expect(chain.eq).toHaveBeenCalledWith("mode", "time");
+    expect(chain.eq).toHaveBeenCalledWith("time_limit", 30);
     expect(chain.order).toHaveBeenCalledWith("best_wpm", { ascending: false });
     expect(chain.limit).toHaveBeenCalledWith(50);
     expect(result).toEqual(entries);
+  });
+
+  it("uses time_limit=0 for infinite mode", async () => {
+    const chain = makeChain({ data: [], error: null });
+    const client = { from: vi.fn().mockReturnValue(chain) } as unknown as SupabaseClient;
+
+    await fetchLeaderboard("infinite", 0, client);
+
+    expect(chain.eq).toHaveBeenCalledWith("mode", "infinite");
+    expect(chain.eq).toHaveBeenCalledWith("time_limit", 0);
   });
 
   it("throws when supabase returns an error", async () => {
     const chain = makeChain({ data: null, error: new Error("DB error") });
     const client = { from: vi.fn().mockReturnValue(chain) } as unknown as SupabaseClient;
 
-    await expect(fetchLeaderboard(client)).rejects.toThrow("DB error");
+    await expect(fetchLeaderboard("time", 30, client)).rejects.toThrow("DB error");
   });
 });
 
@@ -64,14 +76,13 @@ describe("upsertScore", () => {
     client = { from: vi.fn().mockReturnValue(chain) } as unknown as SupabaseClient;
   });
 
-  it("does nothing when new wpm is not better than existing best", async () => {
-    // Existing record: best_wpm = 130
+  it("does nothing when new wpm is not better than existing best for this mode", async () => {
     chain["maybeSingle"] = vi.fn().mockResolvedValue({
       data: { best_wpm: 130 },
       error: null,
     });
 
-    await upsertScore("user-1", "Alice", null, 120, client);
+    await upsertScore("user-1", "Alice", null, 120, "time", 30, client);
 
     expect(chain.upsert).not.toHaveBeenCalled();
   });
@@ -82,22 +93,22 @@ describe("upsertScore", () => {
       error: null,
     });
 
-    await upsertScore("user-1", "Alice", "https://avatar.url", 120, client);
+    await upsertScore("user-1", "Alice", null, 120, "time", 30, client);
 
     expect(chain.upsert).toHaveBeenCalledWith(
-      expect.objectContaining({ user_id: "user-1", best_wpm: 120 }),
-      { onConflict: "user_id" }
+      expect.objectContaining({ user_id: "user-1", best_wpm: 120, mode: "time", time_limit: 30 }),
+      { onConflict: "user_id,mode,time_limit" }
     );
   });
 
-  it("upserts when user has no existing score", async () => {
+  it("upserts when user has no existing score for this mode", async () => {
     chain["maybeSingle"] = vi.fn().mockResolvedValue({ data: null, error: null });
 
-    await upsertScore("user-1", "Alice", null, 85, client);
+    await upsertScore("user-1", "Alice", null, 85, "infinite", 0, client);
 
     expect(chain.upsert).toHaveBeenCalledWith(
-      expect.objectContaining({ user_id: "user-1", best_wpm: 85 }),
-      { onConflict: "user_id" }
+      expect.objectContaining({ user_id: "user-1", best_wpm: 85, mode: "infinite", time_limit: 0 }),
+      { onConflict: "user_id,mode,time_limit" }
     );
   });
 
@@ -105,6 +116,6 @@ describe("upsertScore", () => {
     chain["maybeSingle"] = vi.fn().mockResolvedValue({ data: null, error: null });
     chain["upsert"] = vi.fn().mockResolvedValue({ error: new Error("Write failed") });
 
-    await expect(upsertScore("user-1", "Alice", null, 85, client)).rejects.toThrow("Write failed");
+    await expect(upsertScore("user-1", "Alice", null, 85, "time", 30, client)).rejects.toThrow("Write failed");
   });
 });
