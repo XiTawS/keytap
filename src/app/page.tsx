@@ -11,7 +11,7 @@ import { ModeSelector } from "@/components/mode-selector";
 import { LiveStats } from "@/components/live-stats";
 import { ResultsScreen } from "@/components/results-screen";
 import { SettingsPanel } from "@/components/settings-panel";
-import { useTypingTest, type TestMode, type TimeLimit } from "@/hooks/use-typing-test";
+import { useTypingTest, type TestMode, type TimeLimit, type TestResults } from "@/hooks/use-typing-test";
 import { saveResult } from "@/lib/history";
 import { useSettings } from "@/contexts/settings-context";
 import type { Language } from "@/lib/words";
@@ -51,16 +51,18 @@ export default function Home() {
   const [mode, setMode] = useState<TestMode>("time");
   const [timeLimit, setTimeLimit] = useState<TimeLimit>(30);
   const [errorKeys, setErrorKeys] = useState<Set<string>>(new Set());
+  const [frozenResults, setFrozenResults] = useState<TestResults | null>(null);
   const errorTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const resultsSavedRef = useRef(false);
 
   const typing = useTypingTest({ language, mode, timeLimit });
 
-  // Save results to history when test finishes
+  // Save results to history when test finishes, and freeze them for display
   useEffect(() => {
     if (typing.isFinished && !resultsSavedRef.current) {
       resultsSavedRef.current = true;
       const r = typing.getResults();
+      setFrozenResults(r);
       saveResult({
         wpm: r.wpm,
         rawWpm: r.rawWpm,
@@ -154,12 +156,14 @@ export default function Home() {
 
   const handleReset = useCallback(() => {
     resultsSavedRef.current = false;
+    setFrozenResults(null);
     typing.retry();
     setErrorKeys(new Set());
   }, [typing.retry]);
 
   const handleNextTest = useCallback(() => {
     resultsSavedRef.current = false;
+    setFrozenResults(null);
     typing.reset();
     setErrorKeys(new Set());
   }, [typing.reset]);
@@ -267,9 +271,9 @@ export default function Home() {
           </div>
         )}
 
-        {typing.isFinished ? (
+        {typing.isFinished && frozenResults ? (
           <ResultsScreen
-            results={typing.getResults()}
+            results={frozenResults}
             onRestart={handleReset}
             onNextTest={handleNextTest}
           />
