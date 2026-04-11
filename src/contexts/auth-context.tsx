@@ -12,7 +12,8 @@ import { createClient } from "@/lib/supabase-browser";
 
 interface AuthContextValue {
   user: User | null;
-  signInWithGoogle: () => Promise<void>;
+  signIn: (email: string, password: string) => Promise<string | null>;
+  signUp: (email: string, password: string) => Promise<string | null>;
   signOut: () => Promise<void>;
 }
 
@@ -34,13 +35,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription?.unsubscribe();
   }, [supabase]);
 
-  async function signInWithGoogle() {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+  async function signIn(email: string, password: string): Promise<string | null> {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    return error?.message ?? null;
+  }
+
+  async function signUp(email: string, password: string): Promise<string | null> {
+    const { error } = await supabase.auth.signUp({ email, password });
+    return error?.message ?? null;
   }
 
   async function signOut() {
@@ -48,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, signInWithGoogle, signOut }}>
+    <AuthContext.Provider value={{ user, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );
