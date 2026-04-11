@@ -15,6 +15,10 @@ import { useTypingTest, type TestMode, type TimeLimit } from "@/hooks/use-typing
 import { saveResult } from "@/lib/history";
 import { useSettings } from "@/contexts/settings-context";
 import type { Language } from "@/lib/words";
+import { useAuth } from "@/contexts/auth-context";
+import { AuthButton } from "@/components/auth-button";
+import { LeaderboardModal } from "@/components/leaderboard-modal";
+import { upsertScore } from "@/lib/leaderboard";
 
 // Map expected characters to their KeyboardEvent.code equivalents
 function charToKeyCode(char: string): string | null {
@@ -40,6 +44,8 @@ function charToKeyCode(char: string): string | null {
 
 export default function Home() {
   const { settings } = useSettings();
+  const { user } = useAuth();
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
   const [language, setLanguage] = useState(settings.language);
   const [mode, setMode] = useState<TestMode>("time");
@@ -71,8 +77,19 @@ export default function Home() {
         correctWords: r.correctWords,
         totalWords: r.totalWords,
       });
+      if (user) {
+        const displayName =
+          (user.user_metadata?.full_name as string | undefined) ??
+          user.email ??
+          "Anonymous";
+        const avatarUrl =
+          (user.user_metadata?.avatar_url as string | undefined) ?? null;
+        upsertScore(user.id, displayName, avatarUrl, r.wpm).catch(() => {
+          // Score submission failed silently — does not interrupt the UX
+        });
+      }
     }
-  }, [typing.isFinished]);
+  }, [typing.isFinished, user]);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1024);
@@ -204,19 +221,33 @@ export default function Home() {
     <div className="flex flex-col items-center h-dvh overflow-hidden animate-page-in">
       {/* Logo + name top left */}
       <div className="w-full px-6 pt-2 pb-0 shrink-0">
-        <div className="flex items-center gap-2.5">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[var(--theme-accent)]">
-            <rect x="2" y="6" width="20" height="14" rx="2" stroke="currentColor" strokeWidth="2"/>
-            <rect x="5" y="9" width="2" height="2" rx="0.5" fill="currentColor"/>
-            <rect x="9" y="9" width="2" height="2" rx="0.5" fill="currentColor"/>
-            <rect x="13" y="9" width="2" height="2" rx="0.5" fill="currentColor"/>
-            <rect x="17" y="9" width="2" height="2" rx="0.5" fill="currentColor"/>
-            <rect x="7" y="13" width="2" height="2" rx="0.5" fill="currentColor"/>
-            <rect x="11" y="13" width="2" height="2" rx="0.5" fill="currentColor"/>
-            <rect x="15" y="13" width="2" height="2" rx="0.5" fill="currentColor"/>
-            <rect x="8" y="17" width="8" height="1.5" rx="0.75" fill="currentColor"/>
-          </svg>
-          <span className="text-lg font-bold tracking-tight text-zinc-800 dark:text-zinc-200">KeyTap</span>
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <div className="flex items-center gap-2.5">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[var(--theme-accent)]">
+              <rect x="2" y="6" width="20" height="14" rx="2" stroke="currentColor" strokeWidth="2"/>
+              <rect x="5" y="9" width="2" height="2" rx="0.5" fill="currentColor"/>
+              <rect x="9" y="9" width="2" height="2" rx="0.5" fill="currentColor"/>
+              <rect x="13" y="9" width="2" height="2" rx="0.5" fill="currentColor"/>
+              <rect x="17" y="9" width="2" height="2" rx="0.5" fill="currentColor"/>
+              <rect x="7" y="13" width="2" height="2" rx="0.5" fill="currentColor"/>
+              <rect x="11" y="13" width="2" height="2" rx="0.5" fill="currentColor"/>
+              <rect x="15" y="13" width="2" height="2" rx="0.5" fill="currentColor"/>
+              <rect x="8" y="17" width="8" height="1.5" rx="0.75" fill="currentColor"/>
+            </svg>
+            <span className="text-lg font-bold tracking-tight text-zinc-800 dark:text-zinc-200">KeyTap</span>
+          </div>
+
+          {/* Right side controls */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setLeaderboardOpen(true)}
+              className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors"
+            >
+              leaderboard
+            </button>
+            <AuthButton />
+          </div>
         </div>
       </div>
 
@@ -287,6 +318,11 @@ export default function Home() {
 
       {/* Settings bar — minimal bottom bar */}
       <SettingsPanel />
+
+      <LeaderboardModal
+        isOpen={leaderboardOpen}
+        onClose={() => setLeaderboardOpen(false)}
+      />
     </div>
   );
 }
