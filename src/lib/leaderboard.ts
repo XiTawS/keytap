@@ -21,7 +21,7 @@ export async function fetchLeaderboard(
     .limit(50);
 
   if (error) throw error;
-  return data as LeaderboardEntry[];
+  return (data ?? []) as LeaderboardEntry[];
 }
 
 export async function upsertScore(
