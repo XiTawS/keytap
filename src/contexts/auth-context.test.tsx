@@ -64,6 +64,59 @@ describe("AuthProvider", () => {
 
     expect(screen.getByTestId("user").textContent).toBe("alice@example.com");
   });
+
+  it("calls signInWithOAuth with google provider", async () => {
+    let authUtils: { signInWithGoogle: () => Promise<void> } | null = null;
+
+    function Capture() {
+      const { signInWithGoogle } = useAuth();
+      authUtils = { signInWithGoogle };
+      return null;
+    }
+
+    await act(async () => {
+      render(
+        <AuthProvider>
+          <Capture />
+        </AuthProvider>
+      );
+    });
+
+    await act(async () => {
+      await authUtils!.signInWithGoogle();
+    });
+
+    expect(mockSignInWithOAuth).toHaveBeenCalledWith({
+      provider: "google",
+      options: {
+        redirectTo: expect.stringContaining("/auth/callback"),
+      },
+    });
+  });
+
+  it("calls supabase.auth.signOut on signOut", async () => {
+    let authUtils: { signOut: () => Promise<void> } | null = null;
+
+    function Capture() {
+      const { signOut } = useAuth();
+      authUtils = { signOut };
+      return null;
+    }
+
+    await act(async () => {
+      render(
+        <AuthProvider>
+          <Capture />
+        </AuthProvider>
+      );
+    });
+
+    await act(async () => {
+      await authUtils!.signOut();
+    });
+
+    expect(mockSignOut).toHaveBeenCalled();
+  });
 });
 
 describe("useAuth outside provider", () => {
