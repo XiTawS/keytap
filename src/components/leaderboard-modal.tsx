@@ -22,7 +22,6 @@ interface Tab {
 }
 
 const TABS: Tab[] = [
-  { label: "infinite", mode: "infinite", timeLimit: 0 },
   { label: "15s", mode: "time", timeLimit: 15 },
   { label: "30s", mode: "time", timeLimit: 30 },
   { label: "60s", mode: "time", timeLimit: 60 },
@@ -31,7 +30,7 @@ const TABS: Tab[] = [
 
 export function LeaderboardModal({ isOpen, onClose }: LeaderboardModalProps) {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<Tab>(TABS[2]); // default: 30s
+  const [activeTab, setActiveTab] = useState<Tab>(TABS[1]); // default: 30s
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(false);
 
