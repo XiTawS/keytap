@@ -3,10 +3,10 @@ import { render, screen, act, cleanup } from "@testing-library/react";
 import { AuthProvider, useAuth } from "./auth-context";
 import type { User } from "@supabase/supabase-js";
 
+// Mock the browser client factory
 const mockGetUser = vi.fn();
 const mockOnAuthStateChange = vi.fn();
-const mockSignInWithPassword = vi.fn();
-const mockSignUp = vi.fn();
+const mockSignInWithOAuth = vi.fn();
 const mockSignOut = vi.fn();
 
 vi.mock("@/lib/supabase-browser", () => ({
@@ -14,8 +14,7 @@ vi.mock("@/lib/supabase-browser", () => ({
     auth: {
       getUser: mockGetUser,
       onAuthStateChange: mockOnAuthStateChange,
-      signInWithPassword: mockSignInWithPassword,
-      signUp: mockSignUp,
+      signInWithOAuth: mockSignInWithOAuth,
       signOut: mockSignOut,
     },
   }),
@@ -66,56 +65,36 @@ describe("AuthProvider", () => {
     expect(screen.getByTestId("user").textContent).toBe("alice@example.com");
   });
 
-  it("calls signInWithPassword and returns null on success", async () => {
-    mockSignInWithPassword.mockResolvedValue({ error: null });
-    let authUtils: { signIn: (e: string, p: string) => Promise<string | null> } | null = null;
+  it("calls signInWithOAuth with google provider", async () => {
+    let authUtils: { signInWithGoogle: () => Promise<void> } | null = null;
 
     function Capture() {
-      const { signIn } = useAuth();
-      authUtils = { signIn };
+      const { signInWithGoogle } = useAuth();
+      authUtils = { signInWithGoogle };
       return null;
     }
 
     await act(async () => {
-      render(<AuthProvider><Capture /></AuthProvider>);
+      render(
+        <AuthProvider>
+          <Capture />
+        </AuthProvider>
+      );
     });
-
-    let result: string | null = "not-called";
-    await act(async () => {
-      result = await authUtils!.signIn("alice@example.com", "secret");
-    });
-
-    expect(mockSignInWithPassword).toHaveBeenCalledWith({
-      email: "alice@example.com",
-      password: "secret",
-    });
-    expect(result).toBeNull();
-  });
-
-  it("returns error message from signIn on failure", async () => {
-    mockSignInWithPassword.mockResolvedValue({ error: { message: "Invalid credentials" } });
-    let authUtils: { signIn: (e: string, p: string) => Promise<string | null> } | null = null;
-
-    function Capture() {
-      const { signIn } = useAuth();
-      authUtils = { signIn };
-      return null;
-    }
 
     await act(async () => {
-      render(<AuthProvider><Capture /></AuthProvider>);
+      await authUtils!.signInWithGoogle();
     });
 
-    let result: string | null = null;
-    await act(async () => {
-      result = await authUtils!.signIn("alice@example.com", "wrong");
+    expect(mockSignInWithOAuth).toHaveBeenCalledWith({
+      provider: "google",
+      options: {
+        redirectTo: expect.stringContaining("/auth/callback"),
+      },
     });
-
-    expect(result).toBe("Invalid credentials");
   });
 
   it("calls supabase.auth.signOut on signOut", async () => {
-    mockSignOut.mockResolvedValue({});
     let authUtils: { signOut: () => Promise<void> } | null = null;
 
     function Capture() {
@@ -125,7 +104,11 @@ describe("AuthProvider", () => {
     }
 
     await act(async () => {
-      render(<AuthProvider><Capture /></AuthProvider>);
+      render(
+        <AuthProvider>
+          <Capture />
+        </AuthProvider>
+      );
     });
 
     await act(async () => {

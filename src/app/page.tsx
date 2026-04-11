@@ -78,8 +78,13 @@ export default function Home() {
         totalWords: r.totalWords,
       });
       if (user) {
-        const displayName = user.email?.split("@")[0] ?? "Anonymous";
-        upsertScore(user.id, displayName, null, r.wpm).catch(() => {
+        const displayName =
+          (user.user_metadata?.full_name as string | undefined) ??
+          user.email ??
+          "Anonymous";
+        const avatarUrl =
+          (user.user_metadata?.avatar_url as string | undefined) ?? null;
+        upsertScore(user.id, displayName, avatarUrl, r.wpm).catch(() => {
           // Score submission failed silently — does not interrupt the UX
         });
       }
